@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=400, initial-scale=1.0">
+    <title>Perfil WaBot</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh;
+        }
+        .card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 15px;
+            width: 350px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(46, 160, 67, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #238636, #2ea043);
+        }
+        .header {
+            display: flex; align-items: center; gap: 15px;
+            border-bottom: 1px solid #30363d; padding-bottom: 15px; margin-bottom: 15px;
+        }
+        .avatar {
+            width: 70px; height: 70px; border-radius: 10px;
+            border: 2px solid #2ea043; object-fit: cover;
+        }
+        .info h1 { margin: 0; font-size: 22px; color: #58a6ff; }
+        .info p { margin: 5px 0 0; font-size: 14px; color: #8b949e; }
+        .stats {
+            display: flex; justify-content: space-between; text-align: center;
+        }
+        .stat-box {
+            background: #0d1117; border-radius: 8px; padding: 10px; width: 30%;
+            border: 1px solid #30363d;
+        }
+        .stat-box h2 { margin: 0; font-size: 18px; color: #2ea043; }
+        .stat-box span { font-size: 11px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; }
+        .footer {
+            margin-top: 15px; text-align: center; font-size: 12px; color: #484f58; letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <img id="avatar" src="https://i.postimg.cc/vmc0wMJw/Picsart_25_12_23_21_24_55_017.png" alt="Avatar" class="avatar">
+            <div class="info">
+                <h1 id="nombre">Usuario</h1>
+                <p id="numero">@numero</p>
+                <div style="margin-top:8px; display:inline-block; padding:3px 8px; background:#238636; color:#fff; border-radius:12px; font-size:11px; font-weight:bold;">
+                    NIVEL <span id="nivel">1</span>
+                </div>
+            </div>
+        </div>
+        <div class="stats">
+            <div class="stat-box">
+                <h2 id="mensajes">0</h2>
+                <span>Mensajes</span>
+            </div>
+            <div class="stat-box">
+                <h2 id="warns">0</h2>
+                <span>Warns</span>
+            </div>
+            <div class="stat-box">
+                <h2 id="dinero">0</h2>
+                <span>Monedas</span>
+            </div>
+        </div>
+        <div class="footer">EVIL MORTY OS • CIUDADELA</div>
+    </div>
+
+    <script>
+        // Extraer datos de la URL generada por el bot
+        const params = new URLSearchParams(window.location.search);
+        
+        document.getElementById('nombre').textContent = params.get('nombre') || 'Mortal';
+        document.getElementById('numero').textContent = '@' + (params.get('numero') || '000000');
+        document.getElementById('nivel').textContent = params.get('nivel') || '1';
+        document.getElementById('mensajes').textContent = params.get('mensajes') || '0';
+        document.getElementById('warns').textContent = params.get('warns') || '0';
+        document.getElementById('dinero').textContent = params.get('dinero') || '0';
+        
+        const avatarUrl = params.get('avatar');
+        if (avatarUrl) document.getElementById('avatar').src = avatarUrl;
+    </script>
+</body>
+</html>
