@@ -5,20 +5,22 @@
     <meta name="viewport" content="width=400, initial-scale=1.0">
     <title>Perfil WaBot</title>
     <style>
+        * { box-sizing: border-box; }
         body {
-            margin: 0; padding: 0;
+            margin: 0; padding: 10px;
             background-color: #0d1117;
             color: #c9d1d9;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex; justify-content: center; align-items: center;
-            height: 100vh;
+            width: 400px; height: 260px;
+            overflow: hidden;
         }
         .card {
             background: #161b22;
             border: 1px solid #30363d;
             border-radius: 15px;
-            width: 350px;
-            padding: 20px;
+            width: 380px;
+            padding: 18px;
             box-shadow: 0 0 20px rgba(46, 160, 67, 0.2);
             position: relative;
             overflow: hidden;
@@ -29,36 +31,43 @@
         }
         .header {
             display: flex; align-items: center; gap: 15px;
-            border-bottom: 1px solid #30363d; padding-bottom: 15px; margin-bottom: 15px;
+            border-bottom: 1px solid #30363d; padding-bottom: 12px; margin-bottom: 12px;
         }
         .avatar {
-            width: 70px; height: 70px; border-radius: 10px;
+            width: 68px; height: 68px; border-radius: 10px;
             border: 2px solid #2ea043; object-fit: cover;
+            background-color: #0d1117;
         }
-        .info h1 { margin: 0; font-size: 22px; color: #58a6ff; }
-        .info p { margin: 5px 0 0; font-size: 14px; color: #8b949e; }
+        .info h1 {
+            margin: 0; font-size: 20px; color: #58a6ff;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px;
+        }
+        .info p { margin: 4px 0 0; font-size: 13px; color: #8b949e; }
         .stats {
             display: flex; justify-content: space-between; text-align: center;
         }
         .stat-box {
-            background: #0d1117; border-radius: 8px; padding: 10px; width: 30%;
+            background: #0d1117; border-radius: 8px; padding: 8px; width: 31%;
             border: 1px solid #30363d;
         }
-        .stat-box h2 { margin: 0; font-size: 18px; color: #2ea043; }
-        .stat-box span { font-size: 11px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-box h2 { margin: 0; font-size: 17px; color: #2ea043; }
+        .stat-box span { font-size: 10px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; }
         .footer {
-            margin-top: 15px; text-align: center; font-size: 12px; color: #484f58; letter-spacing: 2px;
+            margin-top: 12px; text-align: center; font-size: 11px; color: #484f58; letter-spacing: 2px;
         }
     </style>
 </head>
 <body>
     <div class="card">
         <div class="header">
-            <img id="avatar" src="https://i.postimg.cc/vmc0wMJw/Picsart_25_12_23_21_24_55_017.png" alt="Avatar" class="avatar">
+            <img id="avatar" 
+                 src="https://i.postimg.cc/vmc0wMJw/Picsart_25_12_23_21_24_55_017.png" 
+                 onerror="this.onerror=null; this.src='https://i.postimg.cc/vmc0wMJw/Picsart_25_12_23_21_24_55_017.png';" 
+                 alt="Avatar" class="avatar">
             <div class="info">
                 <h1 id="nombre">Usuario</h1>
                 <p id="numero">@numero</p>
-                <div style="margin-top:8px; display:inline-block; padding:3px 8px; background:#238636; color:#fff; border-radius:12px; font-size:11px; font-weight:bold;">
+                <div style="margin-top:6px; display:inline-block; padding:3px 8px; background:#238636; color:#fff; border-radius:12px; font-size:11px; font-weight:bold;">
                     NIVEL <span id="nivel">1</span>
                 </div>
             </div>
@@ -81,8 +90,9 @@
     </div>
 
     <script>
-        // Extraer datos de la URL generada por el bot
-        const params = new URLSearchParams(window.location.search);
+        // Soporta parámetros tanto por ? (search) como por # (hash) para evitar recortes de APIs
+        const rawQuery = window.location.search ? window.location.search.substring(1) : window.location.hash.substring(1);
+        const params = new URLSearchParams(rawQuery);
         
         document.getElementById('nombre').textContent = params.get('nombre') || 'Mortal';
         document.getElementById('numero').textContent = '@' + (params.get('numero') || '000000');
@@ -92,7 +102,9 @@
         document.getElementById('dinero').textContent = params.get('dinero') || '0';
         
         const avatarUrl = params.get('avatar');
-        if (avatarUrl) document.getElementById('avatar').src = avatarUrl;
+        if (avatarUrl && avatarUrl.startsWith('http')) {
+            document.getElementById('avatar').src = avatarUrl;
+        }
     </script>
 </body>
 </html>
