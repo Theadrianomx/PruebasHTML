@@ -137,31 +137,31 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 8px;
+            gap: 6px;
             background: linear-gradient(180deg, #2b1259 0%, #14072b 100%);
             border: 2px solid #7c4dff;
             border-radius: 14px;
-            padding: 8px 10px;
+            padding: 8px;
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
         }
 
         .player-badge {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             min-width: 0;
         }
 
         .avatar-circle {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             background: linear-gradient(135deg, #13eb2b, #0b5e14);
             border: 2px solid #ffd700;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             flex-shrink: 0;
             box-shadow: 0 0 10px rgba(19, 235, 43, 0.5);
         }
@@ -179,18 +179,18 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 95px;
+            max-width: 82px;
         }
 
         .player-tag {
-            font-size: 10px;
+            font-size: 9px;
             color: #13eb2b;
             font-weight: 700;
         }
 
         .hud-stats {
             display: flex;
-            gap: 6px;
+            gap: 5px;
             align-items: center;
         }
 
@@ -198,32 +198,63 @@
             background: #090314;
             border: 1.5px solid #ffd700;
             border-radius: 10px;
-            padding: 4px 8px;
+            padding: 4px 6px;
             text-align: right;
-            min-width: 78px;
+            min-width: 66px;
         }
 
         .pill.lost {
             border-color: #ff4757;
-            min-width: 68px;
+            min-width: 58px;
         }
 
         .pill-label {
-            font-size: 8px;
-            letter-spacing: 0.8px;
+            font-size: 7.5px;
+            letter-spacing: 0.6px;
             color: #bdb2ff;
             display: block;
         }
 
         .pill-val {
             font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 900;
             color: #ffd700;
         }
 
         .pill.lost .pill-val {
             color: #ff5c6c;
+        }
+
+        .hud-right {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .btn-mute {
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            background: #090314;
+            border: 1.5px solid #7c4dff;
+            color: #fff;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .btn-mute:active {
+            transform: scale(0.92);
+        }
+
+        .btn-mute.muted {
+            border-color: #ff4757;
+            opacity: 0.75;
         }
 
         .sync-badge {
@@ -233,8 +264,8 @@
             color: #fff;
             font-family: 'Chakra Petch', sans-serif;
             font-weight: 700;
-            font-size: 10px;
-            padding: 7px 8px;
+            font-size: 9.5px;
+            padding: 6px 7px;
             white-space: nowrap;
             pointer-events: none;
         }
@@ -602,7 +633,10 @@
                 </div>
             </div>
 
-            <div class="sync-badge" id="ui-sync">⏳ SYNC</div>
+            <div class="hud-right">
+                <button class="btn-mute" id="btn-mute" onclick="toggleSonido()" title="Sonido">🔊</button>
+                <div class="sync-badge" id="ui-sync">⏳ SYNC</div>
+            </div>
         </div>
 
         <!-- GABINETE DE LA MÁQUINA -->
@@ -668,6 +702,74 @@
         let totalPerdido = 0;
         const emojis = ['🍒', '🍊', '🍉', '🍇', '💎'];
 
+        /* ================= MOTOR DE AUDIO RETRO 8-BIT ================= */
+        const RetroSFX = (() => {
+            let ctx = null;
+            let silenciado = false;
+
+            function init() {
+                if (!ctx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    ctx = new AudioCtx();
+                }
+                if (ctx.state === 'suspended') ctx.resume();
+            }
+
+            function tono(freq, duracion, tipo = 'square', vol = 0.08, delay = 0) {
+                if (silenciado) return;
+                init();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const inicio = ctx.currentTime + delay;
+
+                osc.type = tipo;
+                osc.frequency.setValueAtTime(freq, inicio);
+
+                gain.gain.setValueAtTime(vol, inicio);
+                gain.gain.exponentialRampToValueAtTime(0.001, inicio + duracion);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(inicio);
+                osc.stop(inicio + duracion);
+            }
+
+            return {
+                toggleMute() {
+                    silenciado = !silenciado;
+                    return silenciado;
+                },
+                click() {
+                    tono(620, 0.05, 'square', 0.06);
+                },
+                giro() {
+                    for (let i = 0; i < 10; i++) {
+                        tono(280 + (i % 3) * 90, 0.04, 'square', 0.05, i * 0.085);
+                    }
+                },
+                ganar() {
+                    [523, 659, 784, 1046].forEach((n, i) => tono(n, 0.12, 'square', 0.08, i * 0.08));
+                },
+                jackpot() {
+                    [523, 659, 784, 1046, 784, 1046, 1318, 1568].forEach((n, i) => tono(n, 0.14, 'square', 0.09, i * 0.09));
+                },
+                perder() {
+                    tono(300, 0.14, 'sawtooth', 0.07, 0);
+                    tono(220, 0.22, 'sawtooth', 0.07, 0.13);
+                }
+            };
+        })();
+
+        function toggleSonido() {
+            const muted = RetroSFX.toggleMute();
+            const btn = document.getElementById('btn-mute');
+            btn.innerText = muted ? '🔇' : '🔊';
+            btn.classList.toggle('muted', muted);
+            if (!muted) RetroSFX.click();
+        }
+
+        /* ================= LÓGICA DEL CASINO ================= */
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             if (params.get('num')) document.getElementById('input-num').value = params.get('num');
@@ -692,6 +794,7 @@
             userData.nombre = document.getElementById('input-name').value.trim() || 'Morty';
             if (!userData.numero) return alert('Debes ingresar tu número para jugar.');
 
+            RetroSFX.click();
             document.getElementById('ui-player').innerText = userData.nombre;
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'flex';
@@ -728,6 +831,7 @@
         }
 
         function ajustarApuesta(delta) {
+            RetroSFX.click();
             const input = document.getElementById('bet-input');
             let nuevo = (parseInt(input.value) || 0) + delta;
             if (nuevo < 10) nuevo = 10;
@@ -737,6 +841,7 @@
 
         function apuestaMaxima() {
             if (saldoActual <= 0) return alert('❌ No tienes saldo disponible.');
+            RetroSFX.click();
             document.getElementById('bet-input').value = saldoActual;
         }
 
@@ -751,6 +856,7 @@
             btn.disabled = true;
             saldoActual -= apuesta;
             actualizarHUD();
+            RetroSFX.giro();
 
             const reels = [
                 document.getElementById('r1'),
@@ -779,7 +885,10 @@
                 });
 
                 let premio = 0;
+                let esJackpot = false;
+
                 if (res[0] === res[1] && res[1] === res[2]) {
+                    esJackpot = true;
                     if (res[0] === '💎') premio = apuesta * 100;
                     else if (res[0] === '🍉') premio = apuesta * 50;
                     else premio = apuesta * 10;
@@ -797,10 +906,13 @@
                     saldoActual += premio;
                     status.className = 'status-bar win';
                     status.innerText = `¡GANASTE +${premio.toLocaleString()} 🪙!`;
+                    if (esJackpot) RetroSFX.jackpot();
+                    else RetroSFX.ganar();
                 } else {
                     totalPerdido += apuesta;
                     status.className = 'status-bar lose';
                     status.innerText = 'INTENTA DE NUEVO';
+                    RetroSFX.perder();
                 }
 
                 actualizarHUD();
@@ -811,4 +923,3 @@
     </script>
 </body>
 </html>
-        
