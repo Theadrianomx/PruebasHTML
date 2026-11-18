@@ -10,40 +10,31 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Press Start 2P', cursive; }
 
         body {
-            background-image: url('https://i.postimg.cc/MHZyz1CV/rick-morty-game.png'); /* Tu fondo de Git */
+            background-image: url('https://i.postimg.cc/R0ySSm21/Picsart-25-12-01-19-19-27-322.png');
             background-size: cover;
             background-position: center;
+            background-attachment: fixed;
             color: white;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            align-items: flex-start;
+            min-height: 100vh;
+            overflow-y: auto;
+            padding: 20px 10px;
         }
 
         /* ---------------- PANTALLA DE REGISTRO ---------------- */
         #login-screen {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(18, 2, 36, 0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            backdrop-filter: blur(5px);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 100; backdrop-filter: blur(5px);
         }
 
         .login-box {
-            background: #050505;
-            padding: 30px;
-            border: 4px solid #13eb2b;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 0 30px rgba(19, 235, 43, 0.4);
-            width: 90%;
-            max-width: 400px;
+            background: #050505; padding: 30px; border: 4px solid #13eb2b;
+            border-radius: 12px; text-align: center; box-shadow: 0 0 30px rgba(19, 235, 43, 0.4);
+            width: 90%; max-width: 400px;
         }
 
         .login-box h2 { color: #13eb2b; font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
@@ -56,66 +47,70 @@
         }
 
         .btn-start {
-            background: #13eb2b;
-            color: #000;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            font-size: 12px;
-            margin-top: 10px;
-            cursor: pointer;
-            box-shadow: 0 5px 0 #0b8c18;
+            background: #13eb2b; color: #000; border: none; padding: 15px;
+            width: 100%; font-size: 12px; margin-top: 10px; cursor: pointer; box-shadow: 0 5px 0 #0b8c18;
         }
         .btn-start:active { transform: translateY(5px); box-shadow: none; }
 
         /* ---------------- CONSOLA DE JUEGO ---------------- */
-        #game-screen { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 500px; }
+        #game-screen { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 450px; }
 
-        .header-title { color: #13eb2b; font-size: 18px; text-shadow: 0 0 8px #13eb2b; margin-bottom: 5px; text-align: center; }
+        .header-title { color: #13eb2b; font-size: 18px; text-shadow: 0 0 8px #13eb2b; margin-bottom: 15px; text-align: center; }
         
         .machine-container {
-            background: #050505;
-            padding: 20px;
-            border-radius: 8px;
-            border: 3px solid #fcf003;
-            box-shadow: 0 0 20px rgba(252, 240, 3, 0.3);
-            margin: 20px 0;
+            background: #050505; padding: 20px; border-radius: 8px;
+            border: 3px solid #fcf003; box-shadow: 0 0 20px rgba(252, 240, 3, 0.3);
+            margin-bottom: 20px;
         }
 
         .reels-board { display: flex; gap: 15px; }
 
         .reel {
-            width: 70px; height: 90px;
-            background: #1a1a1a;
-            border: 2px solid #333;
+            width: 70px; height: 90px; background: #1a1a1a; border: 2px solid #333;
             display: flex; justify-content: center; align-items: center;
-            font-size: 45px;
-            overflow: hidden;
-            position: relative;
+            font-size: 45px; overflow: hidden; position: relative;
         }
 
-        .stats-panel { display: flex; gap: 10px; width: 100%; padding: 0 20px; }
-        .stat-box { flex: 1; background: rgba(0,0,0,0.8); border: 1px solid #8a2be2; padding: 10px; text-align: center; }
-        .stat-title { font-size: 8px; color: #13eb2b; margin-bottom: 5px; }
+        /* ---------------- TABLA DE PUNTOS Y APUESTAS ---------------- */
+        .wallet-panel { display: flex; gap: 10px; width: 100%; margin-bottom: 20px; }
+        .stat-box { flex: 1; background: rgba(0,0,0,0.8); border: 1px solid #8a2be2; padding: 10px; text-align: center; border-radius: 6px; }
+        .stat-title { font-size: 7px; color: #13eb2b; margin-bottom: 8px; }
         .stat-value { font-size: 12px; color: #fcf003; }
+        .lose-text { color: #ff3333 !important; }
+        .win-text { color: #13eb2b !important; }
 
-        /* Controles */
-        .controls { margin-top: 30px; display: flex; gap: 20px; }
+        .bet-panel {
+            width: 100%; background: rgba(0,0,0,0.8); border: 1px solid #13eb2b;
+            padding: 15px; border-radius: 6px; margin-bottom: 20px; text-align: center;
+        }
+        .bet-panel-title { font-size: 8px; color: #13eb2b; margin-bottom: 10px; }
+        
+        .bet-controls { display: flex; gap: 10px; justify-content: center; align-items: center; }
+        .bet-controls select {
+            padding: 10px; background: #111; border: 2px solid #8a2be2; color: #fff;
+            font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; flex: 1;
+        }
+        .bet-controls input {
+            padding: 10px; background: #111; border: 2px solid #fcf003; color: #fff;
+            font-family: 'Press Start 2P', cursive; font-size: 10px; flex: 1; width: 100%; text-align: center;
+        }
+
+        .controls { width: 100%; display: flex; justify-content: center; }
         .btn-spin {
             background: #fcf003; color: #000; border: none; padding: 15px 30px;
             font-size: 14px; border-radius: 50px; cursor: pointer;
-            box-shadow: 0 6px 0 #b3a900;
+            box-shadow: 0 6px 0 #b3a900; width: 100%;
         }
         .btn-spin:active { transform: translateY(6px); box-shadow: none; }
+        .btn-spin:disabled { background: #555; box-shadow: 0 6px 0 #222; cursor: not-allowed; }
         
-        /* Animación css para el giro */
         .spinning { animation: shake 0.1s infinite; filter: blur(2px); }
         @keyframes shake { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <!-- 1. REGISTRO RÁPIDO -->
+    <!-- PANTALLA DE REGISTRO -->
     <div id="login-screen">
         <div class="login-box">
             <h2>CITADEL DECK<br>SYSTEM C-137</h2>
@@ -131,7 +126,7 @@
         </div>
     </div>
 
-    <!-- 2. CONSOLA DE JUEGO (Oculta al inicio) -->
+    <!-- CONSOLA DE JUEGO -->
     <div id="game-screen">
         <div class="header-title">CITADEL DECK</div>
         
@@ -143,9 +138,32 @@
             </div>
         </div>
 
-        <div class="stats-panel">
-            <div class="stat-box"><div class="stat-title">APUESTA</div><div class="stat-value">50</div></div>
-            <div class="stat-box"><div class="stat-title">PREMIO</div><div class="stat-value" id="ui-premio">0</div></div>
+        <!-- TABLA DE PUNTOS (Billetera) -->
+        <div class="wallet-panel">
+            <div class="stat-box">
+                <div class="stat-title">DISPONIBLE</div>
+                <div class="stat-value" id="ui-saldo">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">YA PERDIDO</div>
+                <div class="stat-value lose-text" id="ui-perdido">0</div>
+            </div>
+        </div>
+
+        <!-- CONTROLES DE APUESTA (Menú + Input) -->
+        <div class="bet-panel">
+            <div class="bet-panel-title">CONFIGURAR APUESTA</div>
+            <div class="bet-controls">
+                <select id="bet-select" onchange="sincronizarApuesta()">
+                    <option value="10">10 🪙</option>
+                    <option value="50" selected>50 🪙</option>
+                    <option value="100">100 🪙</option>
+                    <option value="500">500 🪙</option>
+                    <option value="ALL">ALL IN</option>
+                    <option value="CUSTOM">Escribir...</option>
+                </select>
+                <input type="number" id="bet-input" value="50" oninput="marcarApuestaManual()">
+            </div>
         </div>
 
         <div class="controls">
@@ -155,17 +173,22 @@
 
     <script>
         let userData = { numero: '', nombre: '' };
+        let saldoActual = 0;
+        let totalPerdido = 0;
         const emojis = ['🍒', '🍊', '🍉', '🍇', '💎'];
-        const costoApuesta = 50;
 
-        // Auto-llenar campos desde la URL que mandó el bot
+        // Al cargar la página, leer URL
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             if(params.get('num')) document.getElementById('input-num').value = params.get('num');
             if(params.get('user')) document.getElementById('input-name').value = params.get('user');
+            
+            // Cargar saldo enviado por el bot
+            saldoActual = parseInt(params.get('cr')) || 0;
+            document.getElementById('ui-saldo').innerText = saldoActual;
         };
 
-        // Función del Botón ENTRAR A LA RED
+        // Función del Botón ENTRAR
         function iniciarConsola() {
             userData.numero = document.getElementById('input-num').value;
             userData.nombre = document.getElementById('input-name').value || 'Jugador';
@@ -176,24 +199,47 @@
             document.getElementById('game-screen').style.display = 'flex';
         }
 
-        // Lógica del juego en vivo en el navegador
+        // --- SISTEMA DE APUESTAS ---
+        function sincronizarApuesta() {
+            const selectVal = document.getElementById('bet-select').value;
+            const inputVal = document.getElementById('bet-input');
+            
+            if (selectVal === 'ALL') {
+                inputVal.value = saldoActual; // Apuesta todo el saldo
+            } else if (selectVal !== 'CUSTOM') {
+                inputVal.value = selectVal;
+            }
+        }
+
+        function marcarApuestaManual() {
+            // Si el usuario escribe manualmente, el selector cambia a "Escribir..."
+            document.getElementById('bet-select').value = 'CUSTOM';
+        }
+
+        // --- MOTOR DEL JUEGO ---
         function tirarSlot() {
             const btn = document.getElementById('btn-spin');
+            const inputApuesta = document.getElementById('bet-input');
+            let apuesta = parseInt(inputApuesta.value);
+
+            // Validaciones de dinero
+            if (isNaN(apuesta) || apuesta <= 0) return alert('Ingresa una apuesta válida.');
+            if (apuesta > saldoActual) return alert('❌ FONDOS INSUFICIENTES. No puedes apostar más de lo que tienes.');
+
+            // Cobrar apuesta y actualizar UI inmediatamente
             btn.disabled = true;
-            btn.style.opacity = '0.5';
+            saldoActual -= apuesta;
+            document.getElementById('ui-saldo').innerText = saldoActual;
             
             const r1 = document.getElementById('r1');
             const r2 = document.getElementById('r2');
             const r3 = document.getElementById('r3');
             
-            // Animación CSS visual
             r1.classList.add('spinning');
             r2.classList.add('spinning');
             r3.classList.add('spinning');
-            document.getElementById('ui-premio').innerText = '...';
 
             setTimeout(() => {
-                // Detener animación y calcular resultado
                 r1.classList.remove('spinning'); r2.classList.remove('spinning'); r3.classList.remove('spinning');
                 
                 const res1 = emojis[Math.floor(Math.random() * emojis.length)];
@@ -204,46 +250,42 @@
 
                 let premioGanado = 0;
                 if (res1 === res2 && res2 === res3) {
-                    if (res1 === '💎') premioGanado = costoApuesta * 100;
-                    else if (res1 === '🍉') premioGanado = costoApuesta * 50;
-                    else premioGanado = costoApuesta * 10;
+                    if (res1 === '💎') premioGanado = apuesta * 100;
+                    else if (res1 === '🍉') premioGanado = apuesta * 50;
+                    else premioGanado = apuesta * 10;
                 } else if (res1 === res2 || res2 === res3 || res1 === res3) {
-                    premioGanado = costoApuesta * 2;
+                    premioGanado = apuesta * 2;
                 }
 
-                document.getElementById('ui-premio').innerText = `+${premioGanado}`;
+                // Actualizar Tabla de Puntos
+                if (premioGanado === 0) {
+                    totalPerdido += apuesta;
+                    document.getElementById('ui-perdido').innerText = totalPerdido;
+                } else {
+                    saldoActual += premioGanado;
+                    document.getElementById('ui-saldo').innerText = saldoActual;
+                    document.getElementById('ui-saldo').classList.add('win-text');
+                    setTimeout(() => document.getElementById('ui-saldo').classList.remove('win-text'), 1000);
+                }
                 
-                // AQUÍ ENVÍAS EL RESULTADO A TU BOT PARA GUARDARLO EN EL JSON
-                enviarResultadosAlBot(userData.numero, costoApuesta, premioGanado);
+                // Informar al bot en Termux (Webhook)
+                enviarResultadosAlBot(userData.numero, apuesta, premioGanado, saldoActual);
 
                 btn.disabled = false;
-                btn.style.opacity = '1';
-            }, 1000); // 1 segundo de giro
+            }, 1000);
         }
 
-        // Puente de comunicación (Webhook) de regreso a Termux
-        async function enviarResultadosAlBot(numero, apuesta, ganancia) {
-            /* 
-             ATENCIÓN ADRIANO: 
-             Como estás usando Cloudflare Tunnels para tu panel web, necesitas 
-             crear una ruta en tu servidor Express de Termux (ej: app.post('/api/slot')) 
-             para recibir esto.
-            */
-            const urlDeTuAPI = 'https://TU_TUNEL_CLOUDFLARE.com/api/slot'; // <- Cambia esto
-
+        // Enviar actualización en vivo al JSON del bot
+        async function enviarResultadosAlBot(numero, apuesta, ganancia, saldoRestante) {
+            const urlDeTuAPI = 'https://TU_TUNEL_CLOUDFLARE.com/api/slot'; // Cambia esto por tu servidor Express
             try {
                 await fetch(urlDeTuAPI, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        numero: numero,
-                        gasto: apuesta,
-                        premio: ganancia
-                    })
+                    body: JSON.stringify({ numero, apuesta, premio: ganancia, saldo: saldoRestante })
                 });
-                console.log('Guardado en la DB del bot con éxito.');
             } catch (err) {
-                console.log('Error conectando con Evil Morty OS:', err);
+                console.log('Error de sincronización:', err);
             }
         }
     </script>
