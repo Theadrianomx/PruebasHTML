@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fruit King C-137 • Maquinita</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Orbitron:wght@700;900&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: radial-gradient(circle at top, #1b0a3d 0%, #090314 100%);
+            color: #fff;
+            font-family: 'Chakra Petch', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            overflow-x: hidden;
+        }
+
+        /* ================= PANTALLA DE REGISTRO ================= */
+        #login-screen {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(42, 12, 84, 0.96), rgba(9, 2, 20, 0.98));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 380px;
+            background: linear-gradient(180deg, #1b0b38 0%, #0b0418 100%);
+            border: 3px solid #ffd700;
+            border-radius: 18px;
+            padding: 24px 20px;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.35);
+            text-align: center;
+        }
+
+        .login-card h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            color: #00e5ff;
+            text-shadow: 0 0 12px rgba(0, 229, 255, 0.8);
+            margin-bottom: 4px;
+        }
+
+        .login-card p {
+            font-size: 12px;
+            color: #ffd700;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .field {
+            text-align: left;
+            margin-bottom: 14px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 11px;
+            color: #c8b6ff;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 2px solid #5f27cd;
+            background: #090314;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .btn-enter {
+            width: 100%;
+            margin-top: 8px;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #39ff14 0%, #0ea81f 100%);
+            color: #031a05;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #075c11;
+        }
+
+        /* ================= GABINETE MAQUINITA ================= */
+        #game-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 440px;
+            gap: 8px;
+        }
+
+        /* Barra superior de estado */
+        .top-bar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #120629;
+            border: 2px solid #00e5ff;
+            border-radius: 12px;
+            padding: 6px 10px;
+            box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
+        }
+
+        .player-info {
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .player-info span {
+            color: #ffd700;
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-mute {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: #090314;
+            border: 1.5px solid #7c4dff;
+            color: #fff;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .sync-badge {
+            background: linear-gradient(180deg, #25d366 0%, #128c7e 100%);
+            border: 1.5px solid #b8ffcb;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 9.5px;
+            padding: 5px 7px;
+        }
+
+        /* Marco dorado estilo Fruit King */
+        .arcade-frame {
+            width: 100%;
+            background: linear-gradient(180deg, #ffdf40 0%, #b87b00 50%, #ffdf40 100%);
+            padding: 4px;
+            border-radius: 18px;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.35);
+        }
+
+        .arcade-inner {
+            background: linear-gradient(180deg, #0b1942 0%, #070d24 100%);
+            border-radius: 14px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border: 2px solid #00e5ff;
+        }
+
+        /* Marcadores LED superiores (PREMIOS / BONUS / CREDITOS) */
+        .led-header {
+            display: grid;
+            grid-template-columns: 1fr 0.55fr 1fr;
+            gap: 6px;
+        }
+
+        .led-box {
+            background: #050505;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            padding: 4px 6px;
+            text-align: center;
+            box-shadow: inset 0 0 10px #000;
+        }
+
+        .led-label {
+            font-size: 8.5px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .led-num {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .led-red {
+            color: #ff2a2a;
+            text-shadow: 0 0 8px #ff2a2a;
+        }
+
+        .led-blue {
+            color: #00e5ff;
+            text-shadow: 0 0 8px #00e5ff;
+        }
+
+        /* ================= TABLERO 7x7 (24 LUCES PERIMETRALES) ================= */
+        .board-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(7, 1fr);
+            gap: 3px;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #040817;
+            padding: 4px;
+            border-radius: 10px;
+            border: 2px solid #ffd700;
+        }
+
+        .tile {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border: 1.5px solid #475569;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: transform 0.08s;
+        }
+
+        .tile-icon {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .tile-mult {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 7.5px;
+            font-weight: 900;
+            color: #ffd700;
+            margin-top: 1px;
+        }
+
+        .tile.special {
+            background: linear-gradient(180deg, #4c1d95 0%, #2e1065 100%);
+            border-color: #c084fc;
+        }
+
+        /* Luz LED activa recorriendo el tablero */
+        .tile.active {
+            background: radial-gradient(circle, #ffffff 0%, #00ff66 45%, #00b347 100%);
+            border-color: #fff;
+            box-shadow: 0 0 16px #00ff66, inset 0 0 8px #fff;
+            transform: scale(1.06);
+            z-index: 5;
+        }
+
+        .tile.active .tile-mult {
+            color: #000;
+        }
+
+        .tile.winner {
+            animation: blinkWin 0.25s infinite alternate;
+            z-index: 6;
+        }
+
+        @keyframes blinkWin {
+            from {
+                background: #ffd700;
+                box-shadow: 0 0 20px #ffd700;
+            }
+            to {
+                background: #ff0055;
+                box-shadow: 0 0 20px #ff0055;
+            }
+        }
+
+        /* Centro del tablero (Logo y mensajes) */
+        .board-center {
+            grid-column: 2 / 7;
+            grid-row: 2 / 7;
+            background: radial-gradient(circle at center, #172554 0%, #090d24 100%);
+            border: 2px solid #00e5ff;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            text-align: center;
+            gap: 6px;
+            box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.25);
+        }
+
+        .center-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            line-height: 1.1;
+        }
+
+        .center-sub {
+            font-size: 10px;
+            color: #00e5ff;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        .center-display {
+            width: 90%;
+            background: #030712;
+            border: 1.5px solid #39ff14;
+            border-radius: 8px;
+            padding: 6px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: #39ff14;
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.7);
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .center-display.lose {
+            border-color: #ff4757;
+            color: #ff6b81;
+            text-shadow: none;
+        }
+
+        .bet-total-pill {
+            font-size: 11px;
+            color: #e2e8f0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid #ffd700;
+        }
+
+        .bet-total-pill b {
+            color: #ffd700;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* ================= PANEL DE APUESTA DE 8 FRUTAS ================= */
+        .bet-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            width: 100%;
+        }
+
+        .fruit-btn {
+            background: linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%);
+            border: 2px solid #4f46e5;
+            border-radius: 10px;
+            padding: 5px 3px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 3px 0 #1e1b4b;
+        }
+
+        .fruit-btn:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        .fruit-btn.has-bet {
+            border-color: #39ff14;
+            background: linear-gradient(180deg, #14532d 0%, #052e16 100%);
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+        }
+
+        .f-mult {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 9px;
+            color: #ffd700;
+            font-weight: 900;
+        }
+
+        .f-icon {
+            font-size: 22px;
+            margin: 1px 0;
+        }
+
+        .f-bet {
+            width: 90%;
+            background: #000;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            color: #ff2a2a;
+            text-align: center;
+            padding: 1px 0;
+            font-weight: 900;
+        }
+
+        .fruit-btn.has-bet .f-bet {
+            color: #39ff14;
+        }
+
+        /* ================= BOTONES DE ACCIÓN ================= */
+        .action-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.6fr;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .btn-act {
+            border: none;
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 11px;
+            padding: 12px 4px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .btn-clear {
+            background: linear-gradient(180deg, #ef4444 0%, #991b1b 100%);
+            box-shadow: 0 4px 0 #450a0a;
+        }
+
+        .btn-repeat {
+            background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
+            box-shadow: 0 4px 0 #78350f;
+            color: #1c1917;
+        }
+
+        .btn-play {
+            background: linear-gradient(180deg, #39ff14 0%, #15803d 100%);
+            box-shadow: 0 4px 0 #052e16, 0 0 15px rgba(57, 255, 20, 0.45);
+            color: #022c22;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .btn-act:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        .btn-act:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE REGISTRO -->
+    <div id="login-screen">
+        <div class="login-card">
+            <h1>FRUIT KING C-137</h1>
+            <p>MAQUINITA ARCADE • EN VIVO</p>
+            <div class="field">
+                <label>Número WhatsApp</label>
+                <input type="text" id="input-num" placeholder="Ej: 19016274924">
+            </div>
+            <div class="field">
+                <label>Nombre</label>
+                <input type="text" id="input-name" placeholder="Tu Nombre">
+            </div>
+            <button class="btn-enter" onclick="iniciarConsola()">INSERTAR MONEDA</button>
+        </div>
+    </div>
+
+    <!-- MAQUINITA PRINCIPAL -->
+    <div id="game-screen">
+
+        <div class="top-bar">
+            <div class="player-info">🛸 <span id="ui-player">Jugador</span></div>
+            <div class="top-controls">
+                <button class="btn-mute" id="btn-mute" onclick="toggleSonido()">🔊</button>
+                <div class="sync-badge" id="ui-sync">⏳ SYNC</div>
+            </div>
+        </div>
+
+        <div class="arcade-frame">
+            <div class="arcade-inner">
+
+                <!-- MARCADORES LED -->
+                <div class="led-header">
+                    <div class="led-box">
+                        <span class="led-label">PREMIOS</span>
+                        <span class="led-num led-red" id="ui-premio">0</span>
+                    </div>
+                    <div class="led-box">
+                        <span class="led-label">PASO</span>
+                        <span class="led-num led-blue" id="ui-step">+10</span>
+                    </div>
+                    <div class="led-box">
+                        <span class="led-label">CRÉDITOS</span>
+                        <span class="led-num led-red" id="ui-saldo">0</span>
+                    </div>
+                </div>
+
+                <!-- TABLERO 7x7 DE 24 CASILLAS -->
+                <div class="board-grid" id="board-grid">
+                    <div class="board-center">
+                        <div class="center-title">FRUIT KING<br>C-137</div>
+                        <div class="center-sub">★ TOQUE FRUTAS PARA APOSTAR ★</div>
+                        <div class="center-display" id="ui-status">ELIGE TUS FRUTAS</div>
+                        <div class="bet-total-pill">APUESTA: <b id="ui-total-bet">0</b> 🪙</div>
+                    </div>
+                </div>
+
+                <!-- BOTONERA DE 8 FRUTAS -->
+                <div class="bet-grid" id="bet-grid"></div>
+
+                <!-- BOTONES DE ACCIÓN -->
+                <div class="action-row">
+                    <button class="btn-act btn-clear" id="btn-clear" onclick="limpiarApuestas()">BORRAR</button>
+                    <button class="btn-act btn-repeat" id="btn-repeat" onclick="repetirApuesta()">REPETIR</button>
+                    <button class="btn-act btn-play" id="btn-play" onclick="iniciarGiro()">JUGAR</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const API_URL = 'https://casino.curvainfinitacentral.com';
+        const PASO_APUESTA = 10;
+
+        let userData = { numero: '', nombre: '' };
+        let saldoActual = 0;
+        let girando = false;
+        let indiceActual = 0;
+        let apuestas = {};
+        let ultimaApuesta = {};
+
+        // 8 frutas apostables con sus multiplicadores clásicos
+        const FRUTAS = [
+            { id: 'king',    icon: '👑', mult: 100 },
+            { id: 'seven',   icon: '7️⃣', mult: 40 },
+            { id: 'star',    icon: '⭐', mult: 30 },
+            { id: 'melon',   icon: '🍉', mult: 25 },
+            { id: 'bell',    icon: '🔔', mult: 20 },
+            { id: 'lemon',   icon: '🍋', mult: 15 },
+            { id: 'orange',  icon: '🍊', mult: 10 },
+            { id: 'apple',   icon: '🍎', mult: 5  }
+        ];
+
+        // 24 casillas en sentido horario (7 arriba, 5 derecha, 7 abajo, 5 izquierda)
+        const CASILLAS = [
+            { id: 'orange', icon: '🍊', mult: 10,  r: 1, c: 1 },
+            { id: 'bell',   icon: '🔔', mult: 20,  r: 1, c: 2 },
+            { id: 'king',   icon: '👑', mult: 100, r: 1, c: 3 },
+            { id: 'apple',  icon: '🍎', mult: 5,   r: 1, c: 4 },
+            { id: 'lemon',  icon: '🍋', mult: 15,  r: 1, c: 5 },
+            { id: 'melon',  icon: '🍉', mult: 25,  r: 1, c: 6 },
+            { id: 'apple',  icon: '🍎', mult: 5,   r: 1, c: 7 },
+
+            { id: 'orange', icon: '🍊', mult: 10,  r: 2, c: 7 },
+            { id: 'star',   icon: '⭐', mult: 30,  r: 3, c: 7 },
+            { id: 'lucky',  icon: '🍀', mult: 0,   r: 4, c: 7, special: true },
+            { id: 'apple',  icon: '🍎', mult: 5,   r: 5, c: 7 },
+            { id: 'lemon',  icon: '🍋', mult: 15,  r: 6, c: 7 },
+
+            { id: 'bell',   icon: '🔔', mult: 20,  r: 7, c: 7 },
+            { id: 'apple',  icon: '🍎', mult: 5,   r: 7, c: 6 },
+            { id: 'seven',  icon: '7️⃣', mult: 40,  r: 7, c: 5 },
+            { id: 'orange', icon: '🍊', mult: 10,  r: 7, c: 4 },
+            { id: 'melon',  icon: '🍉', mult: 25,  r: 7, c: 3 },
+            { id: 'apple',  icon: '🍎', mult: 5,   r: 7, c: 2 },
+            { id: 'lemon',  icon: '🍋', mult: 15,  r: 7, c: 1 },
+
+            { id: 'orange', icon: '🍊', mult: 10,  r: 6, c: 1 },
+            { id: 'bell',   icon: '🔔', mult: 20,  r: 5, c: 1 },
+            { id: 'lucky',  icon: '🍀', mult: 0,   r: 4, c: 1, special: true },
+            { id: 'apple',  icon: '🍎', mult: 5,   r: 3, c: 1 },
+            { id: 'star',   icon: '⭐', mult: 30,  r: 2, c: 1 }
+        ];
+
+         /* ================= MOTOR DE AUDIO RETRO 8-BIT ================= */
+        const RetroSFX = (() => {
+            let ctx = null;
+            let silenciado = false;
+
+            function init() {
+                if (!ctx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    ctx = new AudioCtx();
+                }
+                if (ctx.state === 'suspended') ctx.resume();
+            }
+
+            function tono(freq, duracion, tipo = 'square', vol = 0.08, delay = 0) {
+                if (silenciado) return;
+                init();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const inicio = ctx.currentTime + delay;
+
+                osc.type = tipo;
+                osc.frequency.setValueAtTime(freq, inicio);
+
+                gain.gain.setValueAtTime(vol, inicio);
+                gain.gain.exponentialRampToValueAtTime(0.001, inicio + duracion);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(inicio);
+                osc.stop(inicio + duracion);
+            }
+
+            return {
+                toggleMute() {
+                    silenciado = !silenciado;
+                    return silenciado;
+                },
+                moneda() {
+                    tono(987, 0.06, 'square', 0.06, 0);
+                    tono(1318, 0.1, 'square', 0.06, 0.05);
+                },
+                paso(idx) {
+                    const notas = [330, 392, 440, 523, 587, 659];
+                    tono(notas[idx % notas.length], 0.045, 'square', 0.055);
+                },
+                ganar() {
+                    [523, 659, 784, 1046, 784, 1046].forEach((n, i) => tono(n, 0.12, 'square', 0.09, i * 0.08));
+                },
+                perder() {
+                    tono(280, 0.14, 'sawtooth', 0.07, 0);
+                    tono(190, 0.24, 'sawtooth', 0.07, 0.14);
+                }
+            };
+        })();
+
+        function toggleSonido() {
+            const muted = RetroSFX.toggleMute();
+            document.getElementById('btn-mute').innerText = muted ? '🔇' : '🔊';
+        }
+
+        /* ================= CONSTRUCCIÓN DEL TABLERO ================= */
+        function construirUI() {
+            const board = document.getElementById('board-grid');
+            CASILLAS.forEach((tile, i) => {
+                const el = document.createElement('div');
+                el.className = 'tile' + (tile.special ? ' special' : '');
+                el.id = `tile-${i}`;
+                el.style.gridRow = tile.r;
+                el.style.gridColumn = tile.c;
+                el.innerHTML = `<span class="tile-icon">${tile.icon}</span><span class="tile-mult">${tile.special ? 'BONUS' : 'x' + tile.mult}</span>`;
+                board.appendChild(el);
+            });
+
+            const betGrid = document.getElementById('bet-grid');
+            FRUTAS.forEach(f => {
+                apuestas[f.id] = 0;
+                const btn = document.createElement('button');
+                btn.className = 'fruit-btn';
+                btn.id = `btn-f-${f.id}`;
+                btn.onclick = () => apostarFruta(f.id);
+                btn.innerHTML = `
+                    <span class="f-mult">x${f.mult}</span>
+                    <span class="f-icon">${f.icon}</span>
+                    <span class="f-bet" id="bet-val-${f.id}">0</span>
+                `;
+                betGrid.appendChild(btn);
+            });
+        }
+
+        window.onload = () => {
+            construirUI();
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('num')) document.getElementById('input-num').value = params.get('num');
+            if (params.get('user')) document.getElementById('input-name').value = params.get('user');
+            saldoActual = parseInt(params.get('cr')) || 0;
+            actualizarHUD();
+        };
+
+        function actualizarHUD() {
+            document.getElementById('ui-saldo').innerText = saldoActual.toLocaleString();
+            let total = 0;
+            FRUTAS.forEach(f => {
+                const val = apuestas[f.id] || 0;
+                total += val;
+                document.getElementById(`bet-val-${f.id}`).innerText = val;
+                document.getElementById(`btn-f-${f.id}`).classList.toggle('has-bet', val > 0);
+            });
+            document.getElementById('ui-total-bet').innerText = total.toLocaleString();
+        }
+
+        function setSyncEstado(texto, color) {
+            const el = document.getElementById('ui-sync');
+            el.innerText = texto;
+            el.style.background = color;
+        }
+
+        async function iniciarConsola() {
+            userData.numero = document.getElementById('input-num').value.replace(/[^0-9]/g, '');
+            userData.nombre = document.getElementById('input-name').value.trim() || 'Jugador';
+            if (!userData.numero) return alert('Debes ingresar tu número.');
+
+            RetroSFX.moneda();
+            document.getElementById('ui-player').innerText = userData.nombre;
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'flex';
+
+            try {
+                setSyncEstado('⏳ SYNC...', '#d97706');
+                const res = await fetch(`${API_URL}/api/saldo/${userData.numero}`);
+                const data = await res.json();
+                if (data.ok && data.saldo !== undefined) {
+                    saldoActual = Number(data.saldo);
+                    actualizarHUD();
+                    setSyncEstado('🟢 EN VIVO', 'linear-gradient(180deg, #25d366 0%, #128c7e 100%)');
+                }
+            } catch (e) {
+                setSyncEstado('🔴 OFFLINE', '#b31222');
+            }
+        }
+
+        async function sincronizarSaldo() {
+            try {
+                setSyncEstado('⏳ GUARDANDO', '#d97706');
+                const res = await fetch(`${API_URL}/api/slot`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ numero: userData.numero, saldo: saldoActual })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    setSyncEstado('🟢 EN VIVO', 'linear-gradient(180deg, #25d366 0%, #128c7e 100%)');
+                }
+            } catch (e) {
+                setSyncEstado('🔴 ERROR', '#b31222');
+            }
+        }
+
+        /* ================= LÓGICA DE APUESTAS ================= */
+        function apostarFruta(id) {
+            if (girando) return;
+            if (saldoActual < PASO_APUESTA) return alert('❌ Saldo insuficiente.');
+            saldoActual -= PASO_APUESTA;
+            apuestas[id] = (apuestas[id] || 0) + PASO_APUESTA;
+            RetroSFX.moneda();
+            actualizarHUD();
+        }
+
+        function limpiarApuestas() {
+            if (girando) return;
+            FRUTAS.forEach(f => {
+                saldoActual += apuestas[f.id] || 0;
+                apuestas[f.id] = 0;
+            });
+            actualizarHUD();
+        }
+
+        function repetirApuesta() {
+            if (girando) return;
+            let costo = 0;
+            FRUTAS.forEach(f => costo += ultimaApuesta[f.id] || 0);
+            if (costo === 0) return;
+            limpiarApuestas();
+            if (saldoActual < costo) return alert('❌ Saldo insuficiente para repetir.');
+            FRUTAS.forEach(f => {
+                apuestas[f.id] = ultimaApuesta[f.id] || 0;
+                saldoActual -= apuestas[f.id];
+            });
+            RetroSFX.moneda();
+            actualizarHUD();
+        }
+
+        /* ================= ANIMACIÓN DE LUCES Y RESULTADO ================= */
+        function iniciarGiro() {
+            if (girando) return;
+            let totalApostado = 0;
+            FRUTAS.forEach(f => totalApostado += apuestas[f.id] || 0);
+            if (totalApostado === 0) return alert('Toca al menos una fruta para apostar.');
+
+            // Guardamos copia para el botón REPETIR
+            ultimaApuesta = { ...apuestas };
+
+            girando = true;
+            document.getElementById('btn-play').disabled = true;
+            document.getElementById('btn-clear').disabled = true;
+            document.getElementById('btn-repeat').disabled = true;
+            document.getElementById('ui-premio').innerText = '0';
+
+            const status = document.getElementById('ui-status');
+            status.className = 'center-display';
+            status.innerText = '¡BUENA SUERTE!';
+
+            document.querySelectorAll('.tile').forEach(t => t.classList.remove('active', 'winner'));
+
+            // Elegimos la casilla ganadora y calculamos vueltas (3 a 4 vueltas completas)
+            const destino = Math.floor(Math.random() * CASILLAS.length);
+            const vueltas = 3 * CASILLAS.length;
+            const pasosTotales = vueltas + ((destino - indiceActual + CASILLAS.length) % CASILLAS.length);
+
+            let paso = 0;
+
+            function avanzarLuz() {
+                document.getElementById(`tile-${indiceActual}`).classList.remove('active');
+                indiceActual = (indiceActual + 1) % CASILLAS.length;
+                document.getElementById(`tile-${indiceActual}`).classList.add('active');
+                RetroSFX.paso(paso);
+                paso++;
+
+                if (paso < pasosTotales) {
+                    // Empieza rápido (45ms) y frena suavemente en los últimos 14 pasos
+                    const restantes = pasosTotales - paso;
+                    let delay = 45;
+                    if (restantes < 14) {
+                        delay = 45 + Math.pow(14 - restantes, 2) * 2.2;
+                    }
+                    setTimeout(avanzarLuz, delay);
+                } else {
+                    finalizarGiro(destino, totalApostado);
+                }
+            }
+
+            avanzarLuz();
+        }
+
+        async function finalizarGiro(destino, totalApostado) {
+            const casilla = CASILLAS[destino];
+            const tileEl = document.getElementById(`tile-${destino}`);
+            const status = document.getElementById('ui-status');
+
+            let premio = 0;
+
+            if (casilla.special) {
+                // Casilla BONUS: devuelve la apuesta x2
+                premio = totalApostado * 2;
+                tileEl.classList.add('winner');
+                status.innerText = `🍀 ¡BONUS x2! +${premio.toLocaleString()}`;
+                RetroSFX.ganar();
+            } else {
+                const apostadoAEsta = apuestas[casilla.id] || 0;
+                if (apostadoAEsta > 0) {
+                    premio = apostadoAEsta * casilla.mult;
+                    tileEl.classList.add('winner');
+                    status.innerText = `${casilla.icon} ¡GANASTE +${premio.toLocaleString()}!`;
+                    RetroSFX.ganar();
+                } else {
+                    status.className = 'center-display lose';
+                    status.innerText = `CAYÓ ${casilla.icon} • INTENTA DE NUEVO`;
+                    RetroSFX.perder();
+                }
+            }
+
+            saldoActual += premio;
+            document.getElementById('ui-premio').innerText = premio.toLocaleString();
+
+            // Limpiamos apuestas de la ronda terminada
+            FRUTAS.forEach(f => apuestas[f.id] = 0);
+            actualizarHUD();
+
+            await sincronizarSaldo();
+
+            girando = false;
+            document.getElementById('btn-play').disabled = false;
+            document.getElementById('btn-clear').disabled = false;
+            document.getElementById('btn-repeat').disabled = false;
+        }
+    </script>
+</body>
+</html>
