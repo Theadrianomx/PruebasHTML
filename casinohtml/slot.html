@@ -2,214 +2,249 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=400, height=260, initial-scale=1.0">
-    <title>Citadel Deck C-137 - Slot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Citadel Deck C-137</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Press Start 2P', cursive; }
 
         body {
-            width: 400px;
-            height: 260px;
-            /* Fondo Morado Oscuro Espacial */
-            background: linear-gradient(135deg, #2b0f4c 0%, #120224 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            font-family: 'Press Start 2P', cursive;
-            /* Borde Exterior Verde Portal */
-            border: 4px solid #13eb2b;
-            border-radius: 12px;
-            box-shadow: inset 0 0 25px rgba(19, 235, 43, 0.3);
+            background-image: url('https://i.postimg.cc/Xv8gqj8z/fondo-espacio.jpg'); /* Tu fondo de Git */
+            background-size: cover;
+            background-position: center;
             color: white;
-            padding-top: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             overflow: hidden;
         }
 
-        /* Logotipo de la Consola */
-        .header {
-            text-align: center;
-            margin-bottom: 12px;
-        }
-        
-        .header-title {
-            color: #13eb2b; /* Verde Portal */
-            font-size: 15px;
-            text-shadow: 0 0 8px #13eb2b, 2px 2px 0px #000;
-            margin-bottom: 5px;
-            letter-spacing: -1px;
-        }
-        
-        .header-subtitle {
-            color: #fcf003; /* Amarillo Morty */
-            font-size: 6px;
-            letter-spacing: 1px;
-            text-shadow: 1px 1px 0px #000;
-        }
-
-        /* Mini Tabla de Pagos */
-        .paytable {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 6px 15px;
-            border-radius: 6px;
-            border: 1px solid #8a2be2; /* Borde Morado Neón */
-        }
-
-        .pay-item {
+        /* ---------------- PANTALLA DE REGISTRO ---------------- */
+        #login-screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(18, 2, 36, 0.95);
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            font-size: 7px;
-            color: #ddd;
+            z-index: 100;
+            backdrop-filter: blur(5px);
         }
 
-        .pay-item span {
-            font-size: 13px;
-            margin-bottom: 3px;
+        .login-box {
+            background: #050505;
+            padding: 30px;
+            border: 4px solid #13eb2b;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(19, 235, 43, 0.4);
+            width: 90%;
+            max-width: 400px;
         }
 
-        /* Pantalla Principal del Tragamonedas */
+        .login-box h2 { color: #13eb2b; font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+        
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { font-size: 8px; color: #fcf003; margin-bottom: 5px; display: block; }
+        .input-group input { 
+            width: 100%; padding: 10px; background: #111; border: 2px solid #8a2be2; 
+            color: white; font-family: 'Press Start 2P', cursive; font-size: 10px;
+        }
+
+        .btn-start {
+            background: #13eb2b;
+            color: #000;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-size: 12px;
+            margin-top: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #0b8c18;
+        }
+        .btn-start:active { transform: translateY(5px); box-shadow: none; }
+
+        /* ---------------- CONSOLA DE JUEGO ---------------- */
+        #game-screen { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 500px; }
+
+        .header-title { color: #13eb2b; font-size: 18px; text-shadow: 0 0 8px #13eb2b; margin-bottom: 5px; text-align: center; }
+        
         .machine-container {
             background: #050505;
-            padding: 10px 20px;
+            padding: 20px;
             border-radius: 8px;
-            border: 2px solid #fcf003; /* Borde Amarillo */
-            box-shadow: 0 0 15px rgba(252, 240, 3, 0.3);
+            border: 3px solid #fcf003;
+            box-shadow: 0 0 20px rgba(252, 240, 3, 0.3);
+            margin: 20px 0;
         }
 
-        .reels-board {
-            display: flex;
-            gap: 12px;
-        }
+        .reels-board { display: flex; gap: 15px; }
 
         .reel {
-            width: 55px;
-            height: 75px;
+            width: 70px; height: 90px;
             background: #1a1a1a;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
             border: 2px solid #333;
-            box-shadow: inset 0 0 10px #000;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 45px;
+            overflow: hidden;
+            position: relative;
         }
 
-        /* Efecto cuando ganas (Brillo Verde Portal) */
-        .reel.winner {
-            border: 2px solid #13eb2b;
-            box-shadow: 0 0 15px #13eb2b, inset 0 0 10px rgba(19, 235, 43, 0.2);
-            background: #0a240f;
-        }
+        .stats-panel { display: flex; gap: 10px; width: 100%; padding: 0 20px; }
+        .stat-box { flex: 1; background: rgba(0,0,0,0.8); border: 1px solid #8a2be2; padding: 10px; text-align: center; }
+        .stat-title { font-size: 8px; color: #13eb2b; margin-bottom: 5px; }
+        .stat-value { font-size: 12px; color: #fcf003; }
 
-        /* Pantallas de Datos Inferiores */
-        .stats-panel {
-            display: flex;
-            justify-content: space-between;
-            width: 92%;
-            margin-top: 15px;
-            gap: 8px;
+        /* Controles */
+        .controls { margin-top: 30px; display: flex; gap: 20px; }
+        .btn-spin {
+            background: #fcf003; color: #000; border: none; padding: 15px 30px;
+            font-size: 14px; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 6px 0 #b3a900;
         }
-
-        .stat-box {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 8px;
-            border-radius: 4px;
-            text-align: center;
-            border: 1px solid #8a2be2; /* Borde Morado */
-            flex: 1;
-        }
-
-        .stat-title {
-            font-size: 6px;
-            color: #13eb2b; /* Títulos en Verde Portal */
-            margin-bottom: 5px;
-        }
-
-        .stat-value {
-            font-size: 10px;
-            color: #fcf003; /* Números en Amarillo Morty */
-        }
-
-        .win-text {
-            color: #13eb2b !important;
-            text-shadow: 0 0 5px #13eb2b;
-        }
+        .btn-spin:active { transform: translateY(6px); box-shadow: none; }
         
-        .lose-text {
-            color: #ff3333 !important;
-        }
+        /* Animación css para el giro */
+        .spinning { animation: shake 0.1s infinite; filter: blur(2px); }
+        @keyframes shake { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="header">
+    <!-- 1. REGISTRO RÁPIDO -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>CITADEL DECK<br>SYSTEM C-137</h2>
+            <div class="input-group">
+                <label>Número WhatsApp:</label>
+                <input type="text" id="input-num" placeholder="Ej: 19016274924">
+            </div>
+            <div class="input-group">
+                <label>Nombre:</label>
+                <input type="text" id="input-name" placeholder="Tu Nombre">
+            </div>
+            <button class="btn-start" onclick="iniciarConsola()">ENTRAR A LA RED</button>
+        </div>
+    </div>
+
+    <!-- 2. CONSOLA DE JUEGO (Oculta al inicio) -->
+    <div id="game-screen">
         <div class="header-title">CITADEL DECK</div>
-        <div class="header-subtitle">SYSTEM C-137 • EVIL MORTY OS</div>
-    </div>
-
-    <div class="paytable">
-        <div class="pay-item"><span>💎</span>x100</div>
-        <div class="pay-item"><span>🍉</span>x50</div>
-        <div class="pay-item"><span>🍇</span>x20</div>
-        <div class="pay-item"><span>🍊</span>x10</div>
-        <div class="pay-item"><span>🍒</span>x5</div>
-    </div>
-
-    <div class="machine-container">
-        <div class="reels-board">
-            <div class="reel" id="slot1">❔</div>
-            <div class="reel" id="slot2">❔</div>
-            <div class="reel" id="slot3">❔</div>
+        
+        <div class="machine-container">
+            <div class="reels-board">
+                <div class="reel" id="r1">🍒</div>
+                <div class="reel" id="r2">🍒</div>
+                <div class="reel" id="r3">🍒</div>
+            </div>
         </div>
-    </div>
 
-    <div class="stats-panel">
-        <div class="stat-box">
-            <div class="stat-title">SALDO</div>
-            <div class="stat-value" id="credito">0</div>
+        <div class="stats-panel">
+            <div class="stat-box"><div class="stat-title">APUESTA</div><div class="stat-value">50</div></div>
+            <div class="stat-box"><div class="stat-title">PREMIO</div><div class="stat-value" id="ui-premio">0</div></div>
         </div>
-        <div class="stat-box">
-            <div class="stat-title">APUESTA</div>
-            <div class="stat-value" id="apuesta">50</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-title">PREMIO</div>
-            <div class="stat-value" id="ganado">0</div>
+
+        <div class="controls">
+            <button class="btn-spin" id="btn-spin" onclick="tirarSlot()">🎰 GIRAR</button>
         </div>
     </div>
 
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const s1 = params.get('s1') || '❔';
-        const s2 = params.get('s2') || '❔';
-        const s3 = params.get('s3') || '❔';
-        const credito = params.get('cr') || '0';
-        const apuesta = params.get('ap') || '50';
-        const premio = parseInt(params.get('gan') || '0');
+        let userData = { numero: '', nombre: '' };
+        const emojis = ['🍒', '🍊', '🍉', '🍇', '💎'];
+        const costoApuesta = 50;
 
-        document.getElementById('slot1').innerText = s1;
-        document.getElementById('slot2').innerText = s2;
-        document.getElementById('slot3').innerText = s3;
-        document.getElementById('credito').innerText = credito;
-        document.getElementById('apuesta').innerText = apuesta;
-        
-        const ganadoElem = document.getElementById('ganado');
-        ganadoElem.innerText = premio > 0 ? `+${premio}` : '0';
+        // Auto-llenar campos desde la URL que mandó el bot
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            if(params.get('num')) document.getElementById('input-num').value = params.get('num');
+            if(params.get('user')) document.getElementById('input-name').value = params.get('user');
+        };
 
-        if (premio > 0) {
-            ganadoElem.classList.add('win-text');
-            // Iluminar rodillos ganadores con el Verde Portal
-            if (s1 === s2) { document.getElementById('slot1').classList.add('winner'); document.getElementById('slot2').classList.add('winner'); }
-            if (s2 === s3) { document.getElementById('slot2').classList.add('winner'); document.getElementById('slot3').classList.add('winner'); }
-            if (s1 === s3) { document.getElementById('slot1').classList.add('winner'); document.getElementById('slot3').classList.add('winner'); }
-        } else if (params.has('s1')) {
-            ganadoElem.classList.add('lose-text');
+        // Función del Botón ENTRAR A LA RED
+        function iniciarConsola() {
+            userData.numero = document.getElementById('input-num').value;
+            userData.nombre = document.getElementById('input-name').value || 'Jugador';
+            
+            if(!userData.numero) return alert('Debes ingresar tu número para guardar progreso.');
+
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'flex';
+        }
+
+        // Lógica del juego en vivo en el navegador
+        function tirarSlot() {
+            const btn = document.getElementById('btn-spin');
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            
+            const r1 = document.getElementById('r1');
+            const r2 = document.getElementById('r2');
+            const r3 = document.getElementById('r3');
+            
+            // Animación CSS visual
+            r1.classList.add('spinning');
+            r2.classList.add('spinning');
+            r3.classList.add('spinning');
+            document.getElementById('ui-premio').innerText = '...';
+
+            setTimeout(() => {
+                // Detener animación y calcular resultado
+                r1.classList.remove('spinning'); r2.classList.remove('spinning'); r3.classList.remove('spinning');
+                
+                const res1 = emojis[Math.floor(Math.random() * emojis.length)];
+                const res2 = emojis[Math.floor(Math.random() * emojis.length)];
+                const res3 = emojis[Math.floor(Math.random() * emojis.length)];
+                
+                r1.innerText = res1; r2.innerText = res2; r3.innerText = res3;
+
+                let premioGanado = 0;
+                if (res1 === res2 && res2 === res3) {
+                    if (res1 === '💎') premioGanado = costoApuesta * 100;
+                    else if (res1 === '🍉') premioGanado = costoApuesta * 50;
+                    else premioGanado = costoApuesta * 10;
+                } else if (res1 === res2 || res2 === res3 || res1 === res3) {
+                    premioGanado = costoApuesta * 2;
+                }
+
+                document.getElementById('ui-premio').innerText = `+${premioGanado}`;
+                
+                // AQUÍ ENVÍAS EL RESULTADO A TU BOT PARA GUARDARLO EN EL JSON
+                enviarResultadosAlBot(userData.numero, costoApuesta, premioGanado);
+
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }, 1000); // 1 segundo de giro
+        }
+
+        // Puente de comunicación (Webhook) de regreso a Termux
+        async function enviarResultadosAlBot(numero, apuesta, ganancia) {
+            /* 
+             ATENCIÓN ADRIANO: 
+             Como estás usando Cloudflare Tunnels para tu panel web, necesitas 
+             crear una ruta en tu servidor Express de Termux (ej: app.post('/api/slot')) 
+             para recibir esto.
+            */
+            const urlDeTuAPI = 'https://TU_TUNEL_CLOUDFLARE.com/api/slot'; // <- Cambia esto
+
+            try {
+                await fetch(urlDeTuAPI, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        numero: numero,
+                        gasto: apuesta,
+                        premio: ganancia
+                    })
+                });
+                console.log('Guardado en la DB del bot con éxito.');
+            } catch (err) {
+                console.log('Error conectando con Evil Morty OS:', err);
+            }
         }
     </script>
 </body>
