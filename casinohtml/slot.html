@@ -226,23 +226,17 @@
             color: #ff5c6c;
         }
 
-        .btn-save-top {
+        .sync-badge {
             background: linear-gradient(180deg, #25d366 0%, #128c7e 100%);
             border: 2px solid #b8ffcb;
             border-radius: 10px;
             color: #fff;
             font-family: 'Chakra Petch', sans-serif;
             font-weight: 700;
-            font-size: 11px;
-            padding: 7px 9px;
-            cursor: pointer;
-            box-shadow: 0 3px 0 #0a4d45;
+            font-size: 10px;
+            padding: 7px 8px;
             white-space: nowrap;
-        }
-
-        .btn-save-top:active {
-            transform: translateY(2px);
-            box-shadow: none;
+            pointer-events: none;
         }
 
         /* ================= GABINETE DE CASINO ================= */
@@ -317,7 +311,6 @@
             box-shadow: inset 0 0 20px #000, 0 0 15px rgba(255, 215, 0, 0.3);
         }
 
-        /* Línea central de premio */
         .payline {
             position: absolute;
             left: 0;
@@ -343,7 +336,6 @@
         .reel {
             height: 122px;
             border-radius: 10px;
-            /* Efecto tambor cilíndrico metálico blanco */
             background: linear-gradient(180deg,
                 #8f9bb3 0%,
                 #eef2f7 18%,
@@ -384,7 +376,6 @@
             to { transform: scale(1.04); }
         }
 
-        /* Banner de estado ("Spin to win!") */
         .status-bar {
             background: linear-gradient(90deg, #14072e, #2d1066, #14072e);
             border: 1.5px solid #7c4dff;
@@ -428,7 +419,6 @@
             gap: 8px;
         }
 
-        /* Selector de apuesta (- [input] +) */
         .bet-box {
             background: #080312;
             border: 2px solid #5f27cd;
@@ -496,7 +486,6 @@
             outline: none;
         }
 
-        /* Pantalla LAST WIN */
         .last-win-box {
             background: #080312;
             border: 2px solid #5f27cd;
@@ -517,7 +506,6 @@
             text-shadow: 0 0 8px rgba(19, 235, 43, 0.6);
         }
 
-        /* Fila de botones MAX BET y SPIN */
         .deck-row-bottom {
             display: grid;
             grid-template-columns: 1fr 2fr;
@@ -614,7 +602,7 @@
                 </div>
             </div>
 
-            <button class="btn-save-top" onclick="guardarEnWhatsApp()">💾 GUARDAR</button>
+            <div class="sync-badge" id="ui-sync">⏳ SYNC</div>
         </div>
 
         <!-- GABINETE DE LA MÁQUINA -->
@@ -646,7 +634,7 @@
             </div>
         </div>
 
-          <!-- CONTROLES INFERIORES -->
+         <!-- CONTROLES INFERIORES -->
         <div class="control-deck">
             <div class="deck-row-top">
                 <div class="bet-box">
@@ -673,28 +661,18 @@
     </div>
 
     <script>
+        const API_URL = 'https://casino.curvainfinitacentral.com';
+
         let userData = { numero: '', nombre: '' };
         let saldoActual = 0;
         let totalPerdido = 0;
         const emojis = ['🍒', '🍊', '🍉', '🍇', '💎'];
-        const CLAVE_C137 = 'C137_MORTY_SECRET';
-
-        function generarFirma(num, saldo, ts) {
-            const str = `${num}|${saldo}|${ts}|${CLAVE_C137}`;
-            let hash = 5381;
-            for (let i = 0; i < str.length; i++) {
-                hash = ((hash << 5) + hash) + str.charCodeAt(i);
-                hash = hash & hash;
-            }
-            return Math.abs(hash).toString(36);
-        }
 
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             if (params.get('num')) document.getElementById('input-num').value = params.get('num');
             if (params.get('user')) document.getElementById('input-name').value = params.get('user');
-
-            saldoActual = parseInt(params.get('cr')) || 500;
+            saldoActual = parseInt(params.get('cr')) || 0;
             actualizarHUD();
         };
 
@@ -703,21 +681,55 @@
             document.getElementById('ui-perdido').innerText = totalPerdido.toLocaleString();
         }
 
-        function iniciarConsola() {
+        function setSyncEstado(texto, color) {
+            const el = document.getElementById('ui-sync');
+            el.innerText = texto;
+            el.style.background = color;
+        }
+
+        async function iniciarConsola() {
             userData.numero = document.getElementById('input-num').value.replace(/[^0-9]/g, '');
             userData.nombre = document.getElementById('input-name').value.trim() || 'Morty';
-
-            if (!userData.numero) return alert('Debes ingresar tu número para guardar progreso.');
+            if (!userData.numero) return alert('Debes ingresar tu número para jugar.');
 
             document.getElementById('ui-player').innerText = userData.nombre;
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'flex';
+
+            try {
+                setSyncEstado('⏳ SYNC...', '#d97706');
+                const res = await fetch(`${API_URL}/api/saldo/${userData.numero}`);
+                const data = await res.json();
+                if (data.ok && data.saldo !== undefined) {
+                    saldoActual = Number(data.saldo);
+                    actualizarHUD();
+                    setSyncEstado('🟢 EN VIVO', 'linear-gradient(180deg, #25d366 0%, #128c7e 100%)');
+                }
+            } catch (e) {
+                setSyncEstado('🔴 OFFLINE', '#b31222');
+            }
+        }
+
+        async function sincronizarSaldo() {
+            try {
+                setSyncEstado('⏳ GUARDANDO', '#d97706');
+                const res = await fetch(`${API_URL}/api/slot`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ numero: userData.numero, saldo: saldoActual })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    setSyncEstado('🟢 EN VIVO', 'linear-gradient(180deg, #25d366 0%, #128c7e 100%)');
+                }
+            } catch (e) {
+                setSyncEstado('🔴 ERROR', '#b31222');
+            }
         }
 
         function ajustarApuesta(delta) {
             const input = document.getElementById('bet-input');
-            let actual = parseInt(input.value) || 0;
-            let nuevo = actual + delta;
+            let nuevo = (parseInt(input.value) || 0) + delta;
             if (nuevo < 10) nuevo = 10;
             if (saldoActual > 0 && nuevo > saldoActual) nuevo = saldoActual;
             input.value = nuevo;
@@ -754,7 +766,7 @@
             status.className = 'status-bar';
             status.innerText = 'GIRANDO...';
 
-            setTimeout(() => {
+            setTimeout(async () => {
                 const res = [
                     emojis[Math.floor(Math.random() * emojis.length)],
                     emojis[Math.floor(Math.random() * emojis.length)],
@@ -792,18 +804,11 @@
                 }
 
                 actualizarHUD();
+                await sincronizarSaldo();
                 btn.disabled = false;
             }, 900);
-        }
-
-        function guardarEnWhatsApp() {
-            const ts = Date.now();
-            const firma = generarFirma(userData.numero, saldoActual, ts);
-            const paquete = { n: userData.numero, s: saldoActual, t: ts, h: firma };
-            const token = btoa(JSON.stringify(paquete));
-            const mensaje = `.cobrar ${token}`;
-            window.location.href = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
         }
     </script>
 </body>
 </html>
+        
