@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=400, height=260, initial-scale=1.0">
-    <title>Slot Machine - Evil Morty OS</title>
+    <title>Citadel Deck C-137 - Slot</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
@@ -12,117 +12,146 @@
         body {
             width: 400px;
             height: 260px;
-            background: radial-gradient(circle, #0f2027, #203a43, #2c5364);
+            /* Fondo Morado Oscuro Espacial */
+            background: linear-gradient(135deg, #2b0f4c 0%, #120224 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             font-family: 'Press Start 2P', cursive;
-            border: 4px solid #f6d365;
+            /* Borde Exterior Verde Portal */
+            border: 4px solid #13eb2b;
             border-radius: 12px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+            box-shadow: inset 0 0 25px rgba(19, 235, 43, 0.3);
             color: white;
+            padding-top: 12px;
+            overflow: hidden;
         }
 
+        /* Logotipo de la Consola */
+        .header {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .header-title {
+            color: #13eb2b; /* Verde Portal */
+            font-size: 15px;
+            text-shadow: 0 0 8px #13eb2b, 2px 2px 0px #000;
+            margin-bottom: 5px;
+            letter-spacing: -1px;
+        }
+        
+        .header-subtitle {
+            color: #fcf003; /* Amarillo Morty */
+            font-size: 6px;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 0px #000;
+        }
+
+        /* Mini Tabla de Pagos */
         .paytable {
             display: flex;
             gap: 15px;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             background: rgba(0, 0, 0, 0.6);
-            padding: 8px 15px;
-            border-radius: 8px;
-            border: 2px solid #5ab9ea;
+            padding: 6px 15px;
+            border-radius: 6px;
+            border: 1px solid #8a2be2; /* Borde Morado Neón */
         }
 
         .pay-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 8px;
-            text-shadow: 1px 1px 0px #000;
+            font-size: 7px;
+            color: #ddd;
         }
 
         .pay-item span {
-            font-size: 16px;
-            margin-bottom: 4px;
+            font-size: 13px;
+            margin-bottom: 3px;
         }
 
+        /* Pantalla Principal del Tragamonedas */
         .machine-container {
-            background: linear-gradient(180deg, #111 0%, #333 100%);
-            padding: 15px 25px;
-            border-radius: 15px;
-            border: 3px solid #78c0e0;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+            background: #050505;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 2px solid #fcf003; /* Borde Amarillo */
+            box-shadow: 0 0 15px rgba(252, 240, 3, 0.3);
         }
 
         .reels-board {
             display: flex;
             gap: 12px;
-            background: #000;
-            padding: 10px;
-            border-radius: 8px;
-            border-top: 4px solid #0a0a0a;
-            border-bottom: 4px solid #555;
         }
 
         .reel {
-            width: 65px;
-            height: 85px;
-            background: #fff;
-            border-radius: 6px;
+            width: 55px;
+            height: 75px;
+            background: #1a1a1a;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 45px;
-            box-shadow: inset 0 8px 15px rgba(0,0,0,0.4);
-            border: 2px solid #ccc;
+            font-size: 35px;
+            border: 2px solid #333;
+            box-shadow: inset 0 0 10px #000;
         }
 
+        /* Efecto cuando ganas (Brillo Verde Portal) */
         .reel.winner {
-            border: 3px solid #ffea00;
-            box-shadow: 0 0 20px #ffea00, inset 0 5px 10px rgba(0,0,0,0.3);
-            background: #fffdeb;
+            border: 2px solid #13eb2b;
+            box-shadow: 0 0 15px #13eb2b, inset 0 0 10px rgba(19, 235, 43, 0.2);
+            background: #0a240f;
         }
 
+        /* Pantallas de Datos Inferiores */
         .stats-panel {
             display: flex;
             justify-content: space-between;
-            width: 90%;
+            width: 92%;
             margin-top: 15px;
-            gap: 10px;
+            gap: 8px;
         }
 
         .stat-box {
-            background: #000;
+            background: rgba(0, 0, 0, 0.8);
             padding: 8px;
-            border-radius: 6px;
+            border-radius: 4px;
             text-align: center;
-            border: 2px solid #5ab9ea;
+            border: 1px solid #8a2be2; /* Borde Morado */
             flex: 1;
         }
 
         .stat-title {
-            font-size: 7px;
-            color: #8ec5fc;
+            font-size: 6px;
+            color: #13eb2b; /* Títulos en Verde Portal */
             margin-bottom: 5px;
         }
 
         .stat-value {
-            font-size: 11px;
-            color: #f6d365;
+            font-size: 10px;
+            color: #fcf003; /* Números en Amarillo Morty */
         }
 
         .win-text {
-            color: #00ff00;
-            text-shadow: 0 0 5px #00ff00;
+            color: #13eb2b !important;
+            text-shadow: 0 0 5px #13eb2b;
         }
         
         .lose-text {
-            color: #ff3333;
+            color: #ff3333 !important;
         }
     </style>
 </head>
 <body>
+
+    <div class="header">
+        <div class="header-title">CITADEL DECK</div>
+        <div class="header-subtitle">SYSTEM C-137 • EVIL MORTY OS</div>
+    </div>
 
     <div class="paytable">
         <div class="pay-item"><span>💎</span>x100</div>
@@ -175,7 +204,7 @@
 
         if (premio > 0) {
             ganadoElem.classList.add('win-text');
-            // Iluminar rodillos si coinciden
+            // Iluminar rodillos ganadores con el Verde Portal
             if (s1 === s2) { document.getElementById('slot1').classList.add('winner'); document.getElementById('slot2').classList.add('winner'); }
             if (s2 === s3) { document.getElementById('slot2').classList.add('winner'); document.getElementById('slot3').classList.add('winner'); }
             if (s1 === s3) { document.getElementById('slot1').classList.add('winner'); document.getElementById('slot3').classList.add('winner'); }
