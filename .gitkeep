@@ -1,0 +1,11 @@
+# 1. Crea la carpeta (ejemplo: casinohtml)
+mkdir casinohtml
+
+# 2. Entra a la carpeta
+cd casinohtml
+
+# 3. Crea el archivo vacío .gitkeep
+touch .gitkeep
+
+# (Regresa a la carpeta principal de tu proyecto)
+cd ..
