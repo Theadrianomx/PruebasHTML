@@ -3,182 +3,673 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Citadel Deck C-137</title>
+    <title>Citadel Deck C-137 • Casino</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Orbitron:wght@700;900&display=swap');
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Press Start 2P', cursive; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
-            background-image: url('https://i.postimg.cc/HntNcFZc/desktop.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: white;
+            background: linear-gradient(rgba(14, 5, 32, 0.78), rgba(10, 3, 24, 0.9)),
+                        url('https://i.postimg.cc/HntNcFZc/desktop.jpg') center/cover fixed no-repeat;
+            color: #fff;
+            font-family: 'Chakra Petch', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+
+        /* ================= PANTALLA DE REGISTRO ================= */
+        #login-screen {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(42, 12, 84, 0.96), rgba(9, 2, 20, 0.98));
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            overflow-y: auto;
-            padding: 20px 10px;
+            align-items: center;
+            z-index: 999;
+            padding: 20px;
+            backdrop-filter: blur(8px);
         }
 
-        /* ---------------- PANTALLA DE REGISTRO ---------------- */
-        #login-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(18, 2, 36, 0.95);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 100; backdrop-filter: blur(5px);
+        .login-card {
+            width: 100%;
+            max-width: 380px;
+            background: linear-gradient(180deg, #1b0b38 0%, #0b0418 100%);
+            border: 3px solid #ffd700;
+            border-radius: 18px;
+            padding: 24px 20px;
+            box-shadow: 0 0 30px rgba(19, 235, 43, 0.35), inset 0 0 18px rgba(255, 215, 0, 0.15);
+            text-align: center;
         }
 
-        .login-box {
-            background: #050505; padding: 30px; border: 4px solid #13eb2b;
-            border-radius: 12px; text-align: center; box-shadow: 0 0 30px rgba(19, 235, 43, 0.4);
-            width: 90%; max-width: 400px;
+        .login-card h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            color: #13eb2b;
+            text-shadow: 0 0 12px rgba(19, 235, 43, 0.8);
+            margin-bottom: 4px;
         }
 
-        .login-box h2 { color: #13eb2b; font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
-        
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { font-size: 8px; color: #fcf003; margin-bottom: 5px; display: block; }
-        .input-group input { 
-            width: 100%; padding: 10px; background: #111; border: 2px solid #8a2be2; 
-            color: white; font-family: 'Press Start 2P', cursive; font-size: 10px;
-        }
-
-        .btn-start {
-            background: #13eb2b; color: #000; border: none; padding: 15px;
-            width: 100%; font-size: 12px; margin-top: 10px; cursor: pointer; box-shadow: 0 5px 0 #0b8c18;
-        }
-        .btn-start:active { transform: translateY(5px); box-shadow: none; }
-
-        /* ---------------- CONSOLA DE JUEGO ---------------- */
-        #game-screen { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 450px; }
-
-        .header-title { color: #13eb2b; font-size: 18px; text-shadow: 0 0 8px #13eb2b; margin-bottom: 15px; text-align: center; }
-        
-        .machine-container {
-            background: #050505; padding: 20px; border-radius: 8px;
-            border: 3px solid #fcf003; box-shadow: 0 0 20px rgba(252, 240, 3, 0.3);
+        .login-card p {
+            font-size: 12px;
+            color: #ffd700;
+            letter-spacing: 2px;
             margin-bottom: 20px;
         }
 
-        .reels-board { display: flex; gap: 15px; }
+        .field {
+            text-align: left;
+            margin-bottom: 14px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 11px;
+            color: #c8b6ff;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 2px solid #5f27cd;
+            background: #090314;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .field input:focus {
+            border-color: #13eb2b;
+            box-shadow: 0 0 10px rgba(19, 235, 43, 0.4);
+        }
+
+        .btn-enter {
+            width: 100%;
+            margin-top: 8px;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #39ff14 0%, #0ea81f 100%);
+            color: #031a05;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #075c11, 0 0 18px rgba(57, 255, 20, 0.45);
+        }
+
+        .btn-enter:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #075c11;
+        }
+
+        /* ================= CONTENEDOR PRINCIPAL ================= */
+        #game-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 460px;
+            gap: 10px;
+            margin: auto 0;
+        }
+
+        /* ================= BARRA SUPERIOR (HUD) ================= */
+        .top-hud {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: linear-gradient(180deg, #2b1259 0%, #14072b 100%);
+            border: 2px solid #7c4dff;
+            border-radius: 14px;
+            padding: 8px 10px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+        }
+
+        .player-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .avatar-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #13eb2b, #0b5e14);
+            border: 2px solid #ffd700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(19, 235, 43, 0.5);
+        }
+
+        .player-meta {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .player-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 95px;
+        }
+
+        .player-tag {
+            font-size: 10px;
+            color: #13eb2b;
+            font-weight: 700;
+        }
+
+        .hud-stats {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .pill {
+            background: #090314;
+            border: 1.5px solid #ffd700;
+            border-radius: 10px;
+            padding: 4px 8px;
+            text-align: right;
+            min-width: 78px;
+        }
+
+        .pill.lost {
+            border-color: #ff4757;
+            min-width: 68px;
+        }
+
+        .pill-label {
+            font-size: 8px;
+            letter-spacing: 0.8px;
+            color: #bdb2ff;
+            display: block;
+        }
+
+        .pill-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 900;
+            color: #ffd700;
+        }
+
+        .pill.lost .pill-val {
+            color: #ff5c6c;
+        }
+
+        .btn-save-top {
+            background: linear-gradient(180deg, #25d366 0%, #128c7e 100%);
+            border: 2px solid #b8ffcb;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 7px 9px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #0a4d45;
+            white-space: nowrap;
+        }
+
+        .btn-save-top:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        /* ================= GABINETE DE CASINO ================= */
+        .cabinet {
+            width: 100%;
+            background: linear-gradient(180deg, #ffdf40 0%, #c98a00 22%, #3a1275 50%, #ffdf40 100%);
+            padding: 5px;
+            border-radius: 22px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 25px rgba(255, 215, 0, 0.25);
+        }
+
+        .cabinet-inner {
+            background: linear-gradient(180deg, #1b0a3d 0%, #0d0521 100%);
+            border-radius: 18px;
+            padding: 12px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 2px solid #5c27b8;
+        }
+
+        /* Marquesina de Jackpots */
+        .marquee {
+            background: linear-gradient(180deg, #100426 0%, #1d0942 100%);
+            border: 2px solid #13eb2b;
+            border-radius: 12px;
+            padding: 8px;
+            box-shadow: inset 0 0 15px rgba(19, 235, 43, 0.2);
+        }
+
+        .marquee-title {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+        }
+
+        .paytable-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+        }
+
+        .pay-chip {
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(255, 215, 0, 0.45);
+            border-radius: 7px;
+            padding: 4px 2px;
+            text-align: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: #13eb2b;
+        }
+
+        .pay-chip span {
+            display: block;
+            font-size: 15px;
+            line-height: 1.2;
+        }
+
+        /* Ventana de Rodillos 3D */
+        .reels-frame {
+            position: relative;
+            background: linear-gradient(180deg, #2b2b2b 0%, #000 100%);
+            border: 4px solid #ffd700;
+            border-radius: 14px;
+            padding: 10px 8px;
+            box-shadow: inset 0 0 20px #000, 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Línea central de premio */
+        .payline {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 3px;
+            background: linear-gradient(90deg, #ff0055, #13eb2b, #ffd700, #13eb2b, #ff0055);
+            transform: translateY(-50%);
+            opacity: 0.75;
+            pointer-events: none;
+            z-index: 3;
+            box-shadow: 0 0 8px #13eb2b;
+        }
+
+        .reels-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            position: relative;
+            z-index: 2;
+        }
 
         .reel {
-            width: 70px; height: 90px; background: #1a1a1a; border: 2px solid #333;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 45px; overflow: hidden; position: relative;
+            height: 122px;
+            border-radius: 10px;
+            /* Efecto tambor cilíndrico metálico blanco */
+            background: linear-gradient(180deg,
+                #8f9bb3 0%,
+                #eef2f7 18%,
+                #ffffff 50%,
+                #eef2f7 82%,
+                #7b879e 100%);
+            border: 2px solid #4a5568;
+            box-shadow: inset 0 14px 16px rgba(0, 0, 0, 0.38),
+                        inset 0 -14px 16px rgba(0, 0, 0, 0.38);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            overflow: hidden;
+            transition: transform 0.15s, box-shadow 0.2s;
         }
 
-        /* ---------------- TABLA DE PUNTOS Y APUESTAS ---------------- */
-        .wallet-panel { display: flex; gap: 10px; width: 100%; margin-bottom: 20px; }
-        .stat-box { flex: 1; background: rgba(0,0,0,0.8); border: 1px solid #8a2be2; padding: 10px; text-align: center; border-radius: 6px; }
-        .stat-title { font-size: 7px; color: #13eb2b; margin-bottom: 8px; }
-        .stat-value { font-size: 12px; color: #fcf003; }
-        .lose-text { color: #ff3333 !important; }
-        .win-text { color: #13eb2b !important; }
-
-        .bet-panel {
-            width: 100%; background: rgba(0,0,0,0.8); border: 1px solid #13eb2b;
-            padding: 15px; border-radius: 6px; margin-bottom: 20px; text-align: center;
-        }
-        .bet-panel-title { font-size: 8px; color: #13eb2b; margin-bottom: 10px; }
-        
-        .bet-controls { display: flex; gap: 10px; justify-content: center; align-items: center; }
-        .bet-controls select {
-            padding: 10px; background: #111; border: 2px solid #8a2be2; color: #fff;
-            font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; flex: 1;
-        }
-        .bet-controls input {
-            padding: 10px; background: #111; border: 2px solid #fcf003; color: #fff;
-            font-family: 'Press Start 2P', cursive; font-size: 10px; flex: 1; width: 100%; text-align: center;
+        .reel.winner {
+            border-color: #13eb2b;
+            box-shadow: 0 0 18px #13eb2b,
+                        inset 0 0 16px rgba(19, 235, 43, 0.55);
+            animation: winPulse 0.45s ease-in-out infinite alternate;
         }
 
-        .controls { width: 100%; display: flex; flex-direction: column; gap: 15px; }
-        
+        .reel.spinning {
+            animation: reelSpin 0.09s linear infinite;
+            filter: blur(2.5px);
+        }
+
+        @keyframes reelSpin {
+            0% { transform: translateY(-8px); }
+            50% { transform: translateY(8px); }
+            100% { transform: translateY(-8px); }
+        }
+
+        @keyframes winPulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.04); }
+        }
+
+        /* Banner de estado ("Spin to win!") */
+        .status-bar {
+            background: linear-gradient(90deg, #14072e, #2d1066, #14072e);
+            border: 1.5px solid #7c4dff;
+            border-radius: 10px;
+            padding: 8px 10px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(124, 77, 255, 0.9);
+        }
+
+        .status-bar.win {
+            color: #13eb2b;
+            border-color: #13eb2b;
+            text-shadow: 0 0 10px #13eb2b;
+        }
+
+        .status-bar.lose {
+            color: #ff6b81;
+        }
+
+        /* ================= PANEL INFERIOR DE CONTROLES ================= */
+        .control-deck {
+            width: 100%;
+            background: linear-gradient(180deg, #24104d 0%, #100524 100%);
+            border: 2px solid #ffd700;
+            border-radius: 16px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .deck-row-top {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 8px;
+        }
+
+        /* Selector de apuesta (- [input] +) */
+        .bet-box {
+            background: #080312;
+            border: 2px solid #5f27cd;
+            border-radius: 12px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .deck-label {
+            font-size: 9px;
+            font-weight: 700;
+            color: #c8b6ff;
+            letter-spacing: 1.2px;
+        }
+
+        .bet-stepper {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 5px;
+        }
+
+        .btn-step {
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .btn-minus {
+            background: linear-gradient(180deg, #ff5e6c 0%, #b31222 100%);
+            box-shadow: 0 3px 0 #6e0812;
+        }
+
+        .btn-plus {
+            background: linear-gradient(180deg, #2ecc71 0%, #168043 100%);
+            box-shadow: 0 3px 0 #0b4a25;
+        }
+
+        .btn-step:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        #bet-input {
+            width: 100%;
+            min-width: 0;
+            background: transparent;
+            border: none;
+            color: #ffd700;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 900;
+            text-align: center;
+            outline: none;
+        }
+
+        /* Pantalla LAST WIN */
+        .last-win-box {
+            background: #080312;
+            border: 2px solid #5f27cd;
+            border-radius: 12px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        #ui-last-win {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 17px;
+            font-weight: 900;
+            color: #13eb2b;
+            text-shadow: 0 0 8px rgba(19, 235, 43, 0.6);
+        }
+
+        /* Fila de botones MAX BET y SPIN */
+        .deck-row-bottom {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 8px;
+        }
+
+        .btn-max {
+            background: linear-gradient(180deg, #ffbe0b 0%, #d97706 100%);
+            border: 2px solid #fff3b0;
+            border-radius: 14px;
+            color: #1f0f00;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 13px;
+            line-height: 1.15;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #8a4b00;
+            padding: 10px 6px;
+        }
+
+        .btn-max:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #8a4b00;
+        }
+
         .btn-spin {
-            background: #fcf003; color: #000; border: none; padding: 15px 30px;
-            font-size: 14px; border-radius: 50px; cursor: pointer;
-            box-shadow: 0 6px 0 #b3a900; width: 100%;
+            background: linear-gradient(180deg, #39ff14 0%, #0ea81f 100%);
+            border: 2px solid #d4ffca;
+            border-radius: 14px;
+            color: #032206;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 22px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #075c11, 0 0 18px rgba(57, 255, 20, 0.45);
+            padding: 12px;
         }
-        .btn-spin:active { transform: translateY(6px); box-shadow: none; }
-        .btn-spin:disabled { background: #555; box-shadow: 0 6px 0 #222; cursor: not-allowed; }
 
-        .btn-save {
-            background: #13eb2b; color: #000; border: none; padding: 14px 20px;
-            font-size: 10px; border-radius: 50px; cursor: pointer;
-            box-shadow: 0 5px 0 #0b8c18; width: 100%;
+        .btn-spin:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #075c11;
         }
-        .btn-save:active { transform: translateY(5px); box-shadow: none; }
-        
-        .spinning { animation: shake 0.1s infinite; filter: blur(2px); }
-        @keyframes shake { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } }
+
+        .btn-spin:disabled {
+            background: linear-gradient(180deg, #666 0%, #3d3d3d 100%);
+            border-color: #999;
+            color: #ccc;
+            box-shadow: 0 5px 0 #222;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
 
     <!-- PANTALLA DE REGISTRO -->
     <div id="login-screen">
-        <div class="login-box">
-            <h2>CITADEL DECK<br>SYSTEM C-137</h2>
-            <div class="input-group">
-                <label>Número WhatsApp:</label>
+        <div class="login-card">
+            <h1>CITADEL DECK</h1>
+            <p>SYSTEM C-137 • CASINO</p>
+            <div class="field">
+                <label>Número WhatsApp</label>
                 <input type="text" id="input-num" placeholder="Ej: 19016274924">
             </div>
-            <div class="input-group">
-                <label>Nombre:</label>
+            <div class="field">
+                <label>Nombre</label>
                 <input type="text" id="input-name" placeholder="Tu Nombre">
             </div>
-            <button class="btn-start" onclick="iniciarConsola()">ENTRAR A LA RED</button>
+            <button class="btn-enter" onclick="iniciarConsola()">ENTRAR AL CASINO</button>
         </div>
     </div>
 
-    <!-- CONSOLA DE JUEGO -->
+    <!-- CONSOLA PRINCIPAL -->
     <div id="game-screen">
-        <div class="header-title">CITADEL DECK</div>
-        
-        <div class="machine-container">
-            <div class="reels-board">
-                <div class="reel" id="r1">🍒</div>
-                <div class="reel" id="r2">🍒</div>
-                <div class="reel" id="r3">🍒</div>
+
+        <!-- BARRA SUPERIOR -->
+        <div class="top-hud">
+            <div class="player-badge">
+                <div class="avatar-circle">🛸</div>
+                <div class="player-meta">
+                    <span class="player-name" id="ui-player">Morty</span>
+                    <span class="player-tag">C-137 VIP</span>
+                </div>
+            </div>
+
+            <div class="hud-stats">
+                <div class="pill">
+                    <span class="pill-label">SALDO 🪙</span>
+                    <span class="pill-val" id="ui-saldo">0</span>
+                </div>
+                <div class="pill lost">
+                    <span class="pill-label">PERDIDO</span>
+                    <span class="pill-val" id="ui-perdido">0</span>
+                </div>
+            </div>
+
+            <button class="btn-save-top" onclick="guardarEnWhatsApp()">💾 GUARDAR</button>
+        </div>
+
+        <!-- GABINETE DE LA MÁQUINA -->
+        <div class="cabinet">
+            <div class="cabinet-inner">
+
+                <div class="marquee">
+                    <div class="marquee-title">★ CITADEL JACKPOTS ★</div>
+                    <div class="paytable-row">
+                        <div class="pay-chip"><span>💎</span>x100</div>
+                        <div class="pay-chip"><span>🍉</span>x50</div>
+                        <div class="pay-chip"><span>🍇</span>x10</div>
+                        <div class="pay-chip"><span>🍊</span>x10</div>
+                        <div class="pay-chip"><span>🍒</span>x10</div>
+                    </div>
+                </div>
+
+                <div class="reels-frame">
+                    <div class="payline"></div>
+                    <div class="reels-grid">
+                        <div class="reel" id="r1">💎</div>
+                        <div class="reel" id="r2">🍒</div>
+                        <div class="reel" id="r3">🍉</div>
+                    </div>
+                </div>
+
+                <div class="status-bar" id="ui-status">¡GIRA PARA GANAR!</div>
+
             </div>
         </div>
 
-        <!-- TABLA DE PUNTOS -->
-        <div class="wallet-panel">
-            <div class="stat-box">
-                <div class="stat-title">DISPONIBLE</div>
-                <div class="stat-value" id="ui-saldo">0</div>
+          <!-- CONTROLES INFERIORES -->
+        <div class="control-deck">
+            <div class="deck-row-top">
+                <div class="bet-box">
+                    <span class="deck-label">APUESTA (BET)</span>
+                    <div class="bet-stepper">
+                        <button class="btn-step btn-minus" onclick="ajustarApuesta(-50)">−</button>
+                        <input type="number" id="bet-input" value="50" min="1">
+                        <button class="btn-step btn-plus" onclick="ajustarApuesta(50)">+</button>
+                    </div>
+                </div>
+
+                <div class="last-win-box">
+                    <span class="deck-label">ÚLTIMO PREMIO</span>
+                    <span id="ui-last-win">0</span>
+                </div>
             </div>
-            <div class="stat-box">
-                <div class="stat-title">YA PERDIDO</div>
-                <div class="stat-value lose-text" id="ui-perdido">0</div>
+
+            <div class="deck-row-bottom">
+                <button class="btn-max" onclick="apuestaMaxima()">MAX<br>BET</button>
+                <button class="btn-spin" id="btn-spin" onclick="tirarSlot()">SPIN</button>
             </div>
         </div>
 
-        <!-- CONTROLES DE APUESTA -->
-        <div class="bet-panel">
-            <div class="bet-panel-title">CONFIGURAR APUESTA</div>
-            <div class="bet-controls">
-                <select id="bet-select" onchange="sincronizarApuesta()">
-                    <option value="10">10 🪙</option>
-                    <option value="50" selected>50 🪙</option>
-                    <option value="100">100 🪙</option>
-                    <option value="500">500 🪙</option>
-                    <option value="ALL">ALL IN</option>
-                    <option value="CUSTOM">Escribir...</option>
-                </select>
-                <input type="number" id="bet-input" value="50" oninput="marcarApuestaManual()">
-            </div>
-        </div>
-
-        <!-- BOTONES -->
-        <div class="controls">
-            <button class="btn-spin" id="btn-spin" onclick="tirarSlot()">🎰 GIRAR</button>
-            <button class="btn-save" id="btn-save" onclick="guardarEnWhatsApp()">💾 GUARDAR EN WHATSAPP</button>
-        </div>
     </div>
 
     <script>
@@ -186,8 +677,6 @@
         let saldoActual = 0;
         let totalPerdido = 0;
         const emojis = ['🍒', '🍊', '🍉', '🍇', '💎'];
-
-        // Clave secreta compartida con cobrar.js (anti-trampas)
         const CLAVE_C137 = 'C137_MORTY_SECRET';
 
         function generarFirma(num, saldo, ts) {
@@ -202,36 +691,46 @@
 
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
-            if(params.get('num')) document.getElementById('input-num').value = params.get('num');
-            if(params.get('user')) document.getElementById('input-name').value = params.get('user');
-            
+            if (params.get('num')) document.getElementById('input-num').value = params.get('num');
+            if (params.get('user')) document.getElementById('input-name').value = params.get('user');
+
             saldoActual = parseInt(params.get('cr')) || 500;
-            document.getElementById('ui-saldo').innerText = saldoActual;
+            actualizarHUD();
         };
+
+        function actualizarHUD() {
+            document.getElementById('ui-saldo').innerText = saldoActual.toLocaleString();
+            document.getElementById('ui-perdido').innerText = totalPerdido.toLocaleString();
+        }
 
         function iniciarConsola() {
             userData.numero = document.getElementById('input-num').value.replace(/[^0-9]/g, '');
-            userData.nombre = document.getElementById('input-name').value || 'Jugador';
-            
-            if(!userData.numero) return alert('Debes ingresar tu número para guardar progreso.');
+            userData.nombre = document.getElementById('input-name').value.trim() || 'Morty';
 
+            if (!userData.numero) return alert('Debes ingresar tu número para guardar progreso.');
+
+            document.getElementById('ui-player').innerText = userData.nombre;
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'flex';
         }
 
-        function sincronizarApuesta() {
-            const selectVal = document.getElementById('bet-select').value;
-            const inputVal = document.getElementById('bet-input');
-            if (selectVal === 'ALL') inputVal.value = saldoActual;
-            else if (selectVal !== 'CUSTOM') inputVal.value = selectVal;
+        function ajustarApuesta(delta) {
+            const input = document.getElementById('bet-input');
+            let actual = parseInt(input.value) || 0;
+            let nuevo = actual + delta;
+            if (nuevo < 10) nuevo = 10;
+            if (saldoActual > 0 && nuevo > saldoActual) nuevo = saldoActual;
+            input.value = nuevo;
         }
 
-        function marcarApuestaManual() {
-            document.getElementById('bet-select').value = 'CUSTOM';
+        function apuestaMaxima() {
+            if (saldoActual <= 0) return alert('❌ No tienes saldo disponible.');
+            document.getElementById('bet-input').value = saldoActual;
         }
 
         function tirarSlot() {
             const btn = document.getElementById('btn-spin');
+            const status = document.getElementById('ui-status');
             let apuesta = parseInt(document.getElementById('bet-input').value);
 
             if (isNaN(apuesta) || apuesta <= 0) return alert('Ingresa una apuesta válida.');
@@ -239,63 +738,70 @@
 
             btn.disabled = true;
             saldoActual -= apuesta;
-            document.getElementById('ui-saldo').innerText = saldoActual;
-            
-            const r1 = document.getElementById('r1');
-            const r2 = document.getElementById('r2');
-            const r3 = document.getElementById('r3');
-            
-            r1.classList.add('spinning');
-            r2.classList.add('spinning');
-            r3.classList.add('spinning');
+            actualizarHUD();
+
+            const reels = [
+                document.getElementById('r1'),
+                document.getElementById('r2'),
+                document.getElementById('r3')
+            ];
+
+            reels.forEach(r => {
+                r.classList.remove('winner');
+                r.classList.add('spinning');
+            });
+
+            status.className = 'status-bar';
+            status.innerText = 'GIRANDO...';
 
             setTimeout(() => {
-                r1.classList.remove('spinning'); r2.classList.remove('spinning'); r3.classList.remove('spinning');
-                
-                const res1 = emojis[Math.floor(Math.random() * emojis.length)];
-                const res2 = emojis[Math.floor(Math.random() * emojis.length)];
-                const res3 = emojis[Math.floor(Math.random() * emojis.length)];
-                
-                r1.innerText = res1; r2.innerText = res2; r3.innerText = res3;
+                const res = [
+                    emojis[Math.floor(Math.random() * emojis.length)],
+                    emojis[Math.floor(Math.random() * emojis.length)],
+                    emojis[Math.floor(Math.random() * emojis.length)]
+                ];
 
-                let premioGanado = 0;
-                if (res1 === res2 && res2 === res3) {
-                    if (res1 === '💎') premioGanado = apuesta * 100;
-                    else if (res1 === '🍉') premioGanado = apuesta * 50;
-                    else premioGanado = apuesta * 10;
-                } else if (res1 === res2 || res2 === res3 || res1 === res3) {
-                    premioGanado = apuesta * 2;
+                reels.forEach((r, i) => {
+                    r.classList.remove('spinning');
+                    r.innerText = res[i];
+                });
+
+                let premio = 0;
+                if (res[0] === res[1] && res[1] === res[2]) {
+                    if (res[0] === '💎') premio = apuesta * 100;
+                    else if (res[0] === '🍉') premio = apuesta * 50;
+                    else premio = apuesta * 10;
+                    reels.forEach(r => r.classList.add('winner'));
+                } else if (res[0] === res[1] || res[1] === res[2] || res[0] === res[2]) {
+                    premio = apuesta * 2;
+                    if (res[0] === res[1]) { reels[0].classList.add('winner'); reels[1].classList.add('winner'); }
+                    if (res[1] === res[2]) { reels[1].classList.add('winner'); reels[2].classList.add('winner'); }
+                    if (res[0] === res[2]) { reels[0].classList.add('winner'); reels[2].classList.add('winner'); }
                 }
 
-                if (premioGanado === 0) {
-                    totalPerdido += apuesta;
-                    document.getElementById('ui-perdido').innerText = totalPerdido;
+                document.getElementById('ui-last-win').innerText = premio.toLocaleString();
+
+                if (premio > 0) {
+                    saldoActual += premio;
+                    status.className = 'status-bar win';
+                    status.innerText = `¡GANASTE +${premio.toLocaleString()} 🪙!`;
                 } else {
-                    saldoActual += premioGanado;
-                    document.getElementById('ui-saldo').innerText = saldoActual;
-                    document.getElementById('ui-saldo').classList.add('win-text');
-                    setTimeout(() => document.getElementById('ui-saldo').classList.remove('win-text'), 1000);
+                    totalPerdido += apuesta;
+                    status.className = 'status-bar lose';
+                    status.innerText = 'INTENTA DE NUEVO';
                 }
 
+                actualizarHUD();
                 btn.disabled = false;
-            }, 1000);
+            }, 900);
         }
 
-        // BOTÓN GUARDAR EN WHATSAPP
         function guardarEnWhatsApp() {
             const ts = Date.now();
             const firma = generarFirma(userData.numero, saldoActual, ts);
-            const paquete = {
-                n: userData.numero,
-                s: saldoActual,
-                t: ts,
-                h: firma
-            };
-
+            const paquete = { n: userData.numero, s: saldoActual, t: ts, h: firma };
             const token = btoa(JSON.stringify(paquete));
             const mensaje = `.cobrar ${token}`;
-            
-            // Abre WhatsApp para que el jugador elija el grupo o chat del bot y envíe el código
             window.location.href = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
         }
     </script>
