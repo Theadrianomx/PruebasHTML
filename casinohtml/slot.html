@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=400, height=260, initial-scale=1.0">
+    <title>Slot Machine - Evil Morty OS</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            width: 400px;
+            height: 260px;
+            background: radial-gradient(circle, #0f2027, #203a43, #2c5364);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Press Start 2P', cursive;
+            border: 4px solid #f6d365;
+            border-radius: 12px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+            color: white;
+        }
+
+        .paytable {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 2px solid #5ab9ea;
+        }
+
+        .pay-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 8px;
+            text-shadow: 1px 1px 0px #000;
+        }
+
+        .pay-item span {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .machine-container {
+            background: linear-gradient(180deg, #111 0%, #333 100%);
+            padding: 15px 25px;
+            border-radius: 15px;
+            border: 3px solid #78c0e0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+        }
+
+        .reels-board {
+            display: flex;
+            gap: 12px;
+            background: #000;
+            padding: 10px;
+            border-radius: 8px;
+            border-top: 4px solid #0a0a0a;
+            border-bottom: 4px solid #555;
+        }
+
+        .reel {
+            width: 65px;
+            height: 85px;
+            background: #fff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            box-shadow: inset 0 8px 15px rgba(0,0,0,0.4);
+            border: 2px solid #ccc;
+        }
+
+        .reel.winner {
+            border: 3px solid #ffea00;
+            box-shadow: 0 0 20px #ffea00, inset 0 5px 10px rgba(0,0,0,0.3);
+            background: #fffdeb;
+        }
+
+        .stats-panel {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            margin-top: 15px;
+            gap: 10px;
+        }
+
+        .stat-box {
+            background: #000;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            border: 2px solid #5ab9ea;
+            flex: 1;
+        }
+
+        .stat-title {
+            font-size: 7px;
+            color: #8ec5fc;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 11px;
+            color: #f6d365;
+        }
+
+        .win-text {
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        
+        .lose-text {
+            color: #ff3333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="paytable">
+        <div class="pay-item"><span>💎</span>x100</div>
+        <div class="pay-item"><span>🍉</span>x50</div>
+        <div class="pay-item"><span>🍇</span>x20</div>
+        <div class="pay-item"><span>🍊</span>x10</div>
+        <div class="pay-item"><span>🍒</span>x5</div>
+    </div>
+
+    <div class="machine-container">
+        <div class="reels-board">
+            <div class="reel" id="slot1">❔</div>
+            <div class="reel" id="slot2">❔</div>
+            <div class="reel" id="slot3">❔</div>
+        </div>
+    </div>
+
+    <div class="stats-panel">
+        <div class="stat-box">
+            <div class="stat-title">SALDO</div>
+            <div class="stat-value" id="credito">0</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-title">APUESTA</div>
+            <div class="stat-value" id="apuesta">50</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-title">PREMIO</div>
+            <div class="stat-value" id="ganado">0</div>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const s1 = params.get('s1') || '❔';
+        const s2 = params.get('s2') || '❔';
+        const s3 = params.get('s3') || '❔';
+        const credito = params.get('cr') || '0';
+        const apuesta = params.get('ap') || '50';
+        const premio = parseInt(params.get('gan') || '0');
+
+        document.getElementById('slot1').innerText = s1;
+        document.getElementById('slot2').innerText = s2;
+        document.getElementById('slot3').innerText = s3;
+        document.getElementById('credito').innerText = credito;
+        document.getElementById('apuesta').innerText = apuesta;
+        
+        const ganadoElem = document.getElementById('ganado');
+        ganadoElem.innerText = premio > 0 ? `+${premio}` : '0';
+
+        if (premio > 0) {
+            ganadoElem.classList.add('win-text');
+            // Iluminar rodillos si coinciden
+            if (s1 === s2) { document.getElementById('slot1').classList.add('winner'); document.getElementById('slot2').classList.add('winner'); }
+            if (s2 === s3) { document.getElementById('slot2').classList.add('winner'); document.getElementById('slot3').classList.add('winner'); }
+            if (s1 === s3) { document.getElementById('slot1').classList.add('winner'); document.getElementById('slot3').classList.add('winner'); }
+        } else if (params.has('s1')) {
+            ganadoElem.classList.add('lose-text');
+        }
+    </script>
+</body>
+</html>
